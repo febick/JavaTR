@@ -56,8 +56,8 @@ public class Operations {
 		
 		// Вычисляем нужное количество итераций для возведения в степень
 		do {
-//			tmpValue = tmpValue / 2; // И снова - такой вариант мне нравится больше...
-			tmpValue = tmpValue >> 1;
+			tmpValue = tmpValue / 2; // И снова - такой вариант мне нравится больше...
+//			tmpValue = tmpValue >> 1;
 			result++;	
 		} while (tmpValue > 1);
 		

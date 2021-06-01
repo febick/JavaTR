@@ -56,6 +56,7 @@ class OperationTests {
 	
 	@Test
 	void log2Test() {
+		assertEquals(0, Operations.log2(1));
 		assertEquals(1, Operations.log2(3));
 		assertEquals (7, Operations.log2(128));
 		assertEquals(8, Operations.log2(256));

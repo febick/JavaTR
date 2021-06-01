@@ -4,65 +4,43 @@ public class Main {
 
 	public static void main(String[] args) {
 
-		// Получаем семь случайных чисел и записываем их в long
-		for (int i = 1; i < 8; i++) {
-			byte newNumber = getNewRandomNumber();
-			
+		for (int i = 0; i < 7; i++) {
+			byte newNumber = (byte) (1 + Math.random() * 49);
+
 			if (i == 1) {
 				result = result | newNumber;
 			} else {
+				
+				while (checkIfNumberExist(newNumber, i)){
+					newNumber = (byte) (1 + Math.random() * 49);
+				}
+				
 				result = (result << 8) | newNumber;
 			} 
 			
+			System.out.println(newNumber);
+			
 		}
-		
-		// Выводим результат
-		System.out.println("Выигрышная комбинация:");
-		System.out.println((byte) (result & 0xFF));
-		System.out.println((byte) (result >> 8));
-		System.out.println((byte) (result >> 16));
-		System.out.println((byte) (result >> 24));
-		System.out.println((byte) (result >> 32));
-		System.out.println((byte) (result >> 40));
-		System.out.println((byte) (result >> 48));
-		
 		
 	}
 	
-	private static byte getNewRandomNumber() {
+	private static boolean checkIfNumberExist(byte value, int iteration) {
 		
-		byte result = (byte) (Math.random() * 49);
+		var status = false;
 		
-		while (checkIfNumberExist(result)){
-		    // Пробуем получить новое число
-			result = (byte) (Math.random() * 49);
+		if (iteration != 0) {
+			
+			for (int i = 0; i < 7; i++) {
+				
+				if (value == result >> iteration * 8) {
+					status = false;
+				}
+				
+			}
+			
 		}
 		
-		return result;
-	}
-	
-	private static boolean checkIfNumberExist(byte value) {
-		
-		if (value == 0) {
-			return true;
-		} else if (value == (byte) (result & 0xFF)) {
-			return true;
-		} else if (value == (byte) (result >> 8)) {
-			return true;
-		} else if (value == (byte) (result >> 16)) {
-			return true;
-		} else if (value == (byte) (result >> 24)) {
-			return true;
-		} else if (value == (byte) (result >> 32)) {
-			return true;
-		} else if (value == (byte) (result >> 40)) {
-			return true;
-		} else if (value == (byte) (result >> 48)) {
-			return true;
-		} else {
-			return false;
-		}
-
+		return status;
 	}
 
 }
