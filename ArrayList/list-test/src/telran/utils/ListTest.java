@@ -153,47 +153,33 @@ List<Person> listPersons;
 	}
 
 	@Test
-	void sortNaturalOrderTest() {
-		listInt.add(50);
-		listInt.add(12);
-		listInt.add(41);
-		listInt.add(41);
-		listInt.sort();
-		int [] arrFinally = {1, 2, 3, 4, 5, 12, 41, 41, 50};
+	void getMaxTest() {
+		listInt.add(90);
+		listInt.add(74);
+		listInt.add(4);
+		listInt.add(4);
 		
-		Integer arrFinallyLen = arrFinally.length;  
-		Integer listIntSize = listInt.size();  
-		assertTrue(arrFinallyLen.equals(listIntSize));
 		
-		for(int i = 0; i < listInt.size() - 1; i++) {
-			assertTrue(listInt.get(i).equals(arrFinally[i]));
-		}
 	}
 	
 	@Test
-	void sortCustomComparatorTest() {
-		listPersons.add(new Person(123,null, 50));
-		listPersons.add(new Person(55, null, 52));
-		listPersons.add(new Person(50, null, 50));
+	void sortingTests() {
+		listPersons.add(new Person(5,null, 40));
+		listPersons.add(new Person(4, null, 30));
+		listPersons.add(new Person(3, null, 50));
+		listPersons.add(new Person(2,null, 50));
+		listPersons.add(new Person(1, null, 60));
 		
-		Person[] listPersonSortById = {new Person(50, null, 50), new Person(55, null, 52), new Person(123, null, 50)};
-		Person[] listPersonSortByAge = {new Person(50, null, 50), new Person(123, null, 50), new Person(55, null, 52)};
-		
-		listPersons.sort();
-		
-		for (int i = 0; i < listPersons.size(); i++) {
-			System.out.println(listPersons.get(i).toString());
+		Person[] sortedById = {new Person(1, null, 60), new Person(2,null, 50), new Person(3, null, 50), new Person(4, null, 30), new Person(5,null, 40)};
+		listPersons.sort();		
+		for(int i = 0; i < listPersons.size(); i++) {
+			assertTrue(listPersons.get(i).equals(sortedById[i]));
 		}
 		
-		
-//		for(int i = 0; i < listPersons.size(); i++) {
-//			assertTrue(listPersons.get(i).equals(listPersonSortById[i]));
-//		}
-		
+		Person[] sortedByAge = {new Person(4, null, 30), new Person(5,null, 40), new Person(2,null, 50), new Person(3, null, 50), new Person(1, null, 60)};
 		listPersons.sort(new AgeComparator());
-
 		for(int i = 0; i < listPersons.size(); i++) {
-			assertTrue(listPersons.get(i).equals(listPersonSortByAge[i]));
+			assertTrue(listPersons.get(i).equals(sortedByAge[i]));
 		}
 
 		
