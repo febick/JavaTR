@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.sun.org.apache.bcel.internal.classfile.InnerClass;
+
 class ListTest {
 List<Integer> listInt;
 List<String> listString;
@@ -150,16 +152,6 @@ List<Person> listPersons;
 		assertEquals(1, listInt.indexOf(1));
 		assertFalse(listInt.swap(-10, 1));
 		assertFalse(listInt.swap(1, 10));
-	}
-
-	@Test
-	void getMaxTest() {
-		listInt.add(90);
-		listInt.add(74);
-		listInt.add(4);
-		listInt.add(4);
-		
-		
 	}
 	
 	@Test
