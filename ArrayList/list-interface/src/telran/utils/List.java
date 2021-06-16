@@ -1,5 +1,7 @@
 package telran.utils;
 
+import java.util.Comparator;
+
 public interface List<T> {
 	/**
 	 * 
@@ -93,5 +95,56 @@ public interface List<T> {
 	 * @return return true if swapped, false in the case of any wrong index
 	 */
 	boolean swap(int index1, int index2);
+
+	default boolean contains(T pattern) {
+		return indexOf(pattern) >= 0;
+ 	}
+	
+	static <T> T max(List<T> list, Comparator<T> comp) {
+		T max = list.get(0);
+		int size = list.size();
+		
+		for (int i = 1; i < size; i++) {
+			T current = list.get(i);
+			if (comp.compare(max, current) < 0) {
+				max = current;
+			}
+		}
+
+		return list.get(0);
+	}
+	
+	@SuppressWarnings("unchecked")
+	static <T> T max(List<T> list) {
+		return max(list, (Comparator<T>) Comparator.naturalOrder());
+	}
+	
+	static <T> T min(List<T> list, Comparator<T> comp) {
+		return max(list, comp.reversed());
+	}
+	
+	@SuppressWarnings("unchecked")
+	default void sort() {
+		Comparator<T> naturalOrderComparator = (Comparator<T>) Comparator.naturalOrder();
+		bubleSorting(naturalOrderComparator);
+	}
+	
+	default void sort(Comparator<T> comp) {
+		bubleSorting(comp);
+	}
+	
+	default void bubleSorting(Comparator<T> comp) {
+		boolean isListSorted = false;
+		int size = size() - 1;
+		while (!isListSorted) {
+			isListSorted = true;
+			for (int i = 0; i < size; i++) {
+				if (comp.compare(get(i), get(i + 1)) > 0) {
+					isListSorted = true;
+					swap(i, i + 1);
+				}
+			}
+		}
+	}
 
 }

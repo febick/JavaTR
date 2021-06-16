@@ -1,14 +1,29 @@
 package telran.utils;
 
-public class Person {
+public class Person implements Comparable<Person> {
 
-	int id;
-	String name;
+	private int id;
+	private int age;
+	private String name;
 	
-	public Person(int id, String name) {
+	public Person(int id, String name, int age) {
 		super();
 		this.id = id;
 		this.name = name;
+		this.age = age;
+	}
+	
+	@Override
+	public int compareTo(Person o) {
+		return id - o.id;
+	}
+
+	public int getId() {
+		return id;
+	}
+	
+	public int getAge() {
+		return age;
 	}
 
 	@Override
@@ -35,7 +50,7 @@ public class Person {
 
 	@Override
 	public String toString() {
-		return "Person [id=" + id + ", name=" + name + "]";
+		return "Person [id=" + id + ", name=" + name + ", age:" + age +"]";
 	}
 	
 }

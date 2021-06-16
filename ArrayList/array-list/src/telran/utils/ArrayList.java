@@ -30,19 +30,21 @@ public class ArrayList<T> implements List<T> {
 	}
 	
 	private boolean inRange(int index) {
-		return (index >= 0 && index <= size) ? true : false;
+		return index >= 0 && index < size;
 	}
 	
 	@Override
 	public boolean add(T obj, int index) {
-		boolean res = false;
-		if (inRange(index)) {
-			System.arraycopy(array, index, array, index + 1, size - 1); 
-			array[index] = obj;
-			size++;			
-			res = true;
-		} 
-		return res;
+		if (index < 0 || index > size) {
+			return false;
+		}
+		if (size >= array.length) {
+			allocate();
+		}
+		System.arraycopy(array, index, array, index + 1, size - index);
+		array[index] = obj;
+		size++;
+		return true;
 	}
 
 	@Override
@@ -79,66 +81,83 @@ public class ArrayList<T> implements List<T> {
 	@Override
 	public int lastIndexOf(T pattern) {
 		int index = size - 1;
-		while (index > 0 && !array[index].equals(pattern)) {
+		while (index >= 0 && !array[index].equals(pattern)) {
 			index--;
 		}
-		return index < size ? index : -1;
+		return index >= 0 ? index : -1;
 	}
 
 	@Override
 	public boolean remove(T pattern) {
-		boolean res = false;
-		int index = indexOf(pattern);
-		if (index != -1) {
-			remove(index);
-			res = true;
-		}
-		return res;
+		return remove(indexOf(pattern));
 	}
 
 	@Override
 	public void addAll(List<T> objects) {
-		for (int i = 0; i < objects.size(); i++) {
+		int size = objects.size();
+		for (int i = 0; i < size; i++) {
 			add(objects.get(i));
 		}
 	}
 
 	@Override
 	public boolean removeAll(List<T> patterns) {
+		boolean isRetain = false;
 		boolean res = false;
-		for (int i = 0; i < patterns.size(); i++) {
-			for (int j = 0; j < size; j++) {
-				if (array[j].equals(patterns.get(i))) {
-					remove(j);
-					res = true;
-				}
+		if (this == patterns) {
+			size = 0;
+			clean(0, size);
+			res = true;
+		} else {
+			res =  removing(patterns, isRetain);
+		}
+		return res;
+		
+	}
+
+	private void clean(int startIndex, int sizeBefore) {
+		for (int i = startIndex; i < sizeBefore; i++) {
+			array[i] = null;
+		}
+		
+	}
+
+	private boolean removing(List<T> patterns, boolean isRetain) {
+		int sizeBeforeRemoving = size;
+		int indexAfterRemoving = 0;
+		for(int i = 0; i < sizeBeforeRemoving; i++) {
+			T current = array[i];
+			if (conditionRemoving(patterns, current, isRetain)) {
+				size--;
+			} else {
+				array[indexAfterRemoving++] = array[i];
 			}
+		}
+		boolean res = sizeBeforeRemoving > size;
+		if (res) {
+			clean(size, sizeBeforeRemoving);
 		}
 		return res;
 	}
 
+	private boolean conditionRemoving(List<T> patterns, T current,
+			boolean isRetain) {
+		boolean res = patterns.indexOf(current) >= 0;
+		return isRetain ? !res : res;
+	}
+	
 	@Override
 	public boolean retainAll(List<T> patterns) {
-		return removeAll(makeInverse(array, patterns));
-	}
-
-	private List<T> makeInverse(T[] array, List<T> patterns) {
-		var res = new ArrayList<T>();
-		for (int i = 0; i < size; i++) {
-			var obj = get(i);
-			if (patterns.indexOf(obj) == -1 ) {
-				res.add(obj);
-			}
-		}
-		return res;
+		boolean isRetain = true;
+		return this == patterns ? false : removing(patterns, isRetain);
 	}
 
 	@Override
 	public T set(T object, int index) {
 		T res = null;
 		if (inRange(index))	{
-			array[index] = object;
 			res = array[index];
+			array[index] = object;
 		} 
 		return res;
 	}
@@ -154,5 +173,6 @@ public class ArrayList<T> implements List<T> {
 		}
 		return res;
 	}
+	
 
 }
