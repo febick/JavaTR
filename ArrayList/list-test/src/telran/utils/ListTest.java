@@ -165,7 +165,7 @@ List<Person> listPersons;
 		Integer listIntSize = listInt.size();  
 		assertTrue(arrFinallyLen.equals(listIntSize));
 		
-		for(int i = 0; i < listInt.size()-1; i++) {
+		for(int i = 0; i < listInt.size() - 1; i++) {
 			assertTrue(listInt.get(i).equals(arrFinally[i]));
 		}
 	}
@@ -180,14 +180,23 @@ List<Person> listPersons;
 		Person[] listPersonSortByAge = {new Person(50, null, 50), new Person(123, null, 50), new Person(55, null, 52)};
 		
 		listPersons.sort();
-		for(int i = 0; i < listPersons.size(); i++) {
-			assertTrue(listPersons.get(i).equals(listPersonSortById[i]));
+		
+		for (int i = 0; i < listPersons.size(); i++) {
+			System.out.println(listPersons.get(i).toString());
 		}
 		
+		
+//		for(int i = 0; i < listPersons.size(); i++) {
+//			assertTrue(listPersons.get(i).equals(listPersonSortById[i]));
+//		}
+		
 		listPersons.sort(new AgeComparator());
+
 		for(int i = 0; i < listPersons.size(); i++) {
 			assertTrue(listPersons.get(i).equals(listPersonSortByAge[i]));
 		}
+
+		
 	}
 	
 

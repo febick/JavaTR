@@ -7,7 +7,7 @@ public class Person implements Comparable<Person> {
 	private String name;
 	
 	public Person(int id, String name, int age) {
-		super();
+//		super();
 		this.id = id;
 		this.name = name;
 		this.age = age;
@@ -24,6 +24,10 @@ public class Person implements Comparable<Person> {
 	
 	public int getAge() {
 		return age;
+	}
+	
+	public String getName() {
+		return name;
 	}
 
 	@Override
