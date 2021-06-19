@@ -2,20 +2,25 @@ package telran.utils;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.Comparator;
+import java.util.function.Predicate;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.sun.org.apache.bcel.internal.classfile.InnerClass;
-
 class ListTest {
-List<Integer> listInt;
-List<String> listString;
-List<Person> listPersons; 
+	
+	List<Integer> listInt;
+	List<String> listString;
+	List<Person> listPersons; 
+
+	Person p1 = new Person(5, "Петя", 40);
+	Person p2 = new Person(3, "Вася", 45);
 
 	@BeforeEach
 	void setUp() throws Exception {
 		listPersons = new ArrayList<>(1);
-		listInt =  new ArrayList<>(1);
+		listInt = new ArrayList<>(1);
 		listString = new ArrayList<>();
 		listInt.add(1);
 		listInt.add(2);
@@ -24,12 +29,12 @@ List<Person> listPersons;
 		listInt.add(5);
 	}
 	
-
 	@Test
 	void addTest() {
 		listInt.add(6);
 		assertEquals(6, listInt.get(5));
 	}
+	
 	@Test
 	void addIndexTest() {
 		assertTrue(listInt.add(100, 0));
@@ -75,9 +80,10 @@ List<Person> listPersons;
 		assertEquals(2, listInt.indexOf(500));
 
 		Person prs1 = new Person(0, "Moshe", 0);
-		Person pattern = new Person(0, null, 0);//equals per only Person Id
+		Person pattern = new Person(0, null, 0);
 		List<Person> persons = new ArrayList<>();
 		persons.add(prs1);
+		
 		assertEquals(0, persons.indexOf(pattern));
 		
 	}
@@ -155,6 +161,14 @@ List<Person> listPersons;
 	}
 	
 	@Test
+	void maxAndMinTest() {
+		int realMin = List.min(listInt, Comparator.naturalOrder());
+		int realMax = List.max(listInt);
+		assertEquals(1, realMin);
+		assertEquals(5, realMax);
+	}
+	
+	@Test
 	void sortingTests() {
 		listPersons.add(new Person(5,null, 40));
 		listPersons.add(new Person(4, null, 30));
@@ -173,9 +187,64 @@ List<Person> listPersons;
 		for(int i = 0; i < listPersons.size(); i++) {
 			assertTrue(listPersons.get(i).equals(sortedByAge[i]));
 		}
-
-		
 	}
 	
+	@Test
+	void newSortTest() {
+		listPersons.add(p1);
+		listPersons.add(p2);
+		listPersons.sort((p1, p2) -> p1.getName().compareTo(p2.getName()));		
+		
+		assertEquals(p2, listPersons.get(0));
+		assertEquals(p1, listPersons.get(1));
+	}
+	
+	@Test
+	void indexOfPredicateRest() {
+		assertEquals(1, listInt.indexOf(new DeviderNumbersPredicate(2)));
+		assertEquals(-1, listInt.indexOf(new DeviderNumbersPredicate(10)));
+		
+		Predicate<Integer> pred = n -> n % 2 == 0;
+		
+		assertEquals(1, listInt.indexOf(pred));
+		assertEquals(-1, listInt.indexOf(n -> n % 10 == 0));
+	}
+	
+	@Test
+	void lastIndexOfPredicateRest() {
+		assertEquals(3, listInt.lastIndexOf(new DeviderNumbersPredicate(2)));
+		assertEquals(-1, listInt.lastIndexOf(new DeviderNumbersPredicate(10)));
+	}
+	
+	@Test
+	void removeIf() {
+		assertTrue(listInt.removeIf(n -> n % 2 == 0));		
+		assertEquals(3, listInt.size());
+		assertFalse(listInt.removeIf(n -> n % 10 == 0));
+	}
+	
+	@Test
+	void cleanTest() {
+		assertEquals(5, listInt.size());
+		listInt.clean();
+		assertEquals(0, listInt.size());
+		
+		listPersons.add(p1);
+		listPersons.add(p2);
+		assertEquals(2, listPersons.size());
+		listPersons.clean();
+		assertEquals(0, listPersons.size());
+	}
+	
+	@Test
+	void removeRepeated() {
+		listInt.add(4);
+		listInt.add(4);
+		listInt.add(4);
+		listInt.add(4);
+		assertEquals(9, listInt.size());
+		assertTrue(listInt.removeRepeated());
+		assertEquals(5, listInt.size());
+	}
 
 }

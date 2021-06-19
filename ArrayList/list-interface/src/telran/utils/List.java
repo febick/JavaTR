@@ -1,6 +1,8 @@
 package telran.utils;
 
 import java.util.Comparator;
+import java.util.function.Predicate;
+
 
 public interface List<T> {
 	/**
@@ -43,14 +45,55 @@ public interface List<T> {
 	 * @return index of first occurrence for an object equaled to the pattern
 	 * in the case no object equaled to the pattern returns -1
 	 */
-	int indexOf(T pattern);
-	/**
+	default int indexOf(T pattern) {
+		return indexOf(n -> n.equals(pattern));
+	}
+	
+	/**nb
 	 * 
 	 * @param pattern
 	 * @return index of the last occurrence for an object equaled to the pattern
 	 * in the case no object equaled to the pattern, returns -1
 	 */
-	int lastIndexOf(T pattern);
+	default int lastIndexOf(T pattern) {
+		return lastIndexOf(n -> n.equals(pattern));
+	}
+	
+	/**
+	 * 
+	 * @param predcate
+	 * @return index (first object matching predicate) or -1
+	 */
+	int indexOf(Predicate<T> predcate);
+	
+	/**
+	 * 
+	 * @param predcate
+	 * @return index (last object matching predicate) or -1
+	 */
+	int lastIndexOf(Predicate<T> predcate);
+	
+	/**
+	 * removing all objects matching a given predicate
+	 * @param predicate
+	 * @return true if at least one object has been removed
+	 */
+	boolean removeIf(Predicate<T> predicate);
+	
+	/**
+	 * for several equaled objects to leave only one and remove others 
+	 * @return true if at least one object has been removed
+	 */
+	default boolean removeRepeated() {
+		return removeIf(n -> indexOf(n) != lastIndexOf(n));
+	}
+	
+	/**
+	 * remove all elements from list
+	 */
+	default void clean() {
+		removeAll(this);
+	}
 	
 	/**
 	 * removes first occurred object equaled to a given pattern
@@ -71,14 +114,18 @@ public interface List<T> {
 	 * @param patterns
 	 * @return true if at least one object has been removed
 	 */
-	boolean removeAll (List<T> patterns);
+	default  boolean removeAll (List<T> patterns) {
+		return removeIf(obj -> patterns.indexOf(obj) >= 0);
+	}
 	
 	/**
 	 * removes all objects not equaled to the given patterns
 	 * @param patterns
 	 * @return true if at least one object has been removed
 	 */
-	boolean retainAll (List<T> patterns);
+	default boolean retainAll (List<T> patterns) {
+		return removeIf(obj -> patterns.indexOf(obj) < 0);
+	}
 	
 	/**
 	 * sets new reference to an object at existing index
@@ -111,7 +158,7 @@ public interface List<T> {
 			}
 		}
 
-		return list.get(0);
+		return max;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -125,29 +172,20 @@ public interface List<T> {
 	
 	@SuppressWarnings("unchecked")
 	default void sort() {
-		Comparator<T> naturalOrderComparator = (Comparator<T>) Comparator.naturalOrder();
-		bubleSorting(naturalOrderComparator);
+		sort((Comparator<T>) Comparator.naturalOrder());
 	}
 	
 	default void sort(Comparator<T> comp) {
-		bubleSorting(comp);
-	}
-	
-	default void bubleSorting(Comparator<T> comp) {
 		boolean isListSorted = false;
-		int maxIterations = size() - 1;
-		int shift = 0;
+		int maxIterations = size();
 		while (!isListSorted) {
 			isListSorted = true;
-			for (int i = 0; i < maxIterations - shift; i++) {
+			maxIterations--;
+			for (int i = 0; i < maxIterations; i++) {
 				if (comp.compare(get(i), get(i + 1)) > 0) {
 					isListSorted = false;
 					swap(i, i + 1);
-				}
-				
-				if (i == maxIterations - 1) {
-					shift++;
-				}
+				}	
 			}
 		}
 	}
