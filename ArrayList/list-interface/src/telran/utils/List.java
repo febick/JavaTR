@@ -89,6 +89,23 @@ public interface List<T> {
 	}
 	
 	/**
+     * Return count of object in list
+     * @param pattern
+     * @return count of object
+     */
+    default int count(T pattern) {
+    	var size = size();
+    	var count = 0;
+    	for (int i = 0; i < size; i++) {
+    		var current = get(i);
+    		if (current.equals(pattern)) {
+    			count++;
+    		}
+    	}
+    	return count;
+    }
+	
+	/**
 	 * remove all elements from list
 	 */
 	default void clean() {
@@ -101,13 +118,20 @@ public interface List<T> {
 	 * @return true if removed otherwise false
 	 * (here there is some challenge, try to understand it)
 	 */
-	boolean remove(T pattern);
+	default boolean remove(T pattern) {
+		return remove(indexOf(pattern));
+	};
 	
-	/** 
-	 * adds all objects 
+	/**
+	 * Adds all objects
 	 * @param objects
 	 */
-	void addAll(List<T> objects);
+	default void addAll(List<T> objects) {
+		int currnetSize = objects.size();
+		for (int i = 0; i < currnetSize; i++) {
+			add(objects.get(i));
+		}
+	};
 	
 	/**
 	 * removes all objects equaled to the given patterns
@@ -115,6 +139,12 @@ public interface List<T> {
 	 * @return true if at least one object has been removed
 	 */
 	default  boolean removeAll (List<T> patterns) {
+		
+		if (patterns.equals(this)) {
+			clean();
+			return true;
+		}
+		
 		return removeIf(obj -> patterns.indexOf(obj) >= 0);
 	}
 	
@@ -189,5 +219,6 @@ public interface List<T> {
 			}
 		}
 	}
+
 
 }

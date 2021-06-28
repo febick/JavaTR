@@ -19,9 +19,14 @@ class ListTest {
 
 	@BeforeEach
 	void setUp() throws Exception {
-		listPersons = new ArrayList<>(1);
-		listInt = new ArrayList<>(1);
-		listString = new ArrayList<>();
+//		listPersons = new ArrayList<1>();
+//		listInt = new ArrayList<>(1);
+//		listString = new ArrayList<>();
+		
+		listPersons = new LinkedList<>();
+		listInt = new LinkedList<>();
+		listString = new LinkedList<>();
+		
 		listInt.add(1);
 		listInt.add(2);
 		listInt.add(3);
