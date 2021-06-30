@@ -2,6 +2,7 @@ package telran.utils;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.function.Predicate;
 
 public class LinkedList<T> extends AbstractList<T> {
@@ -17,6 +18,28 @@ public class LinkedList<T> extends AbstractList<T> {
 	
 	private Node<T> head;
 	private Node<T> tail;
+	
+	private class LinkedListIterator implements Iterator<T> {
+		Node<T> current = head;
+		
+		@Override
+		public boolean hasNext() {
+			return current != null;
+		}
+
+		@Override
+		public T next() {
+			T res = current.obj;
+			current = current.next;
+			return res;
+		}
+		
+	}
+	
+	@Override
+	public Iterator<T> iterator() {
+		return new LinkedListIterator();
+	}
 
 	@Override
 	public void add(T obj) {
@@ -120,8 +143,9 @@ public class LinkedList<T> extends AbstractList<T> {
 	public T set(T object, int index) {
 		T res = null;
 		if (inRange(index))	{
-			res = getNodeAtIndex(index).obj;
-			getNodeAtIndex(index).obj = object;
+			var oldNode = getNodeAtIndex(index);
+			res = oldNode.obj;
+			oldNode.obj = object;
 		} 
 		return res;
 	}
@@ -216,5 +240,7 @@ public class LinkedList<T> extends AbstractList<T> {
 		head.next.prev = null;
 		head = head.next;
 	}
+
+	
 
 }

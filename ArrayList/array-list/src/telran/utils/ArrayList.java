@@ -1,6 +1,7 @@
 package telran.utils;
 
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.function.Predicate;
 
 @SuppressWarnings("unchecked")
@@ -109,6 +110,12 @@ public class ArrayList<T> extends AbstractList<T> {
 			res = true;
 		}
 		return res;
+	}
+
+	@Override
+	public Iterator<T> iterator() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

@@ -175,25 +175,32 @@ class ListTest {
 	
 	@Test
 	void sortingTests() {
-		listPersons.add(new Person(5,null, 40));
-		listPersons.add(new Person(4, null, 30));
-		listPersons.add(new Person(3, null, 50));
-		listPersons.add(new Person(2,null, 50));
-		listPersons.add(new Person(1, null, 60));
-		
-		Person[] sortedById = {new Person(1, null, 60), new Person(2,null, 50), new Person(3, null, 50), new Person(4, null, 30), new Person(5,null, 40)};
-		listPersons.sort();		
-		for(int i = 0; i < listPersons.size(); i++) {
-			assertTrue(listPersons.get(i).equals(sortedById[i]));
+		fillRandomPersons(1000);
+		Person array[] = new Person[listPersons.size()];
+		fillArrayFromList(listPersons, array);
+		testArraySorted(array);
+	}
+
+	private void testArraySorted(Person[] array) {
+		for (int i = 1; i < array.length; i++) {
+			assertTrue(array[i - 1].compareTo(array[i]) <= 0);
 		}
-		
-		Person[] sortedByAge = {new Person(4, null, 30), new Person(5,null, 40), new Person(2,null, 50), new Person(3, null, 50), new Person(1, null, 60)};
-		listPersons.sort(new AgeComparator());
-		for(int i = 0; i < listPersons.size(); i++) {
-			assertTrue(listPersons.get(i).equals(sortedByAge[i]));
+	}
+
+	private <T> void fillArrayFromList(List<T> list, T[] array) {
+		int index = 0;
+		for (T obj : list) {
+			array[index++] = obj;
 		}
 	}
 	
+	private void fillRandomPersons(int nPersons) {
+		for (int i = 0;  i < nPersons; i++) {
+			listPersons.add(new Person((int) (Math.random() * Integer.MAX_VALUE),
+					"name" + Math.random(), 0));
+		}
+	}
+
 	@Test
 	void newSortTest() {
 		listPersons.add(p1);

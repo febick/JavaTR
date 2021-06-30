@@ -4,7 +4,7 @@ import java.util.Comparator;
 import java.util.function.Predicate;
 
 
-public interface List<T> {
+public interface List<T> extends Iterable<T> {
 	/**
 	 * 
 	 * @return number of elements
@@ -127,8 +127,8 @@ public interface List<T> {
 	 * @param objects
 	 */
 	default void addAll(List<T> objects) {
-		int currnetSize = objects.size();
-		for (int i = 0; i < currnetSize; i++) {
+		int currentSize = objects.size();
+		for (int i = 0; i < currentSize; i++) {
 			add(objects.get(i));
 		}
 	};
