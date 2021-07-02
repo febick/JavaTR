@@ -1,34 +1,13 @@
 package telran.utils;
 
 public class Person implements Comparable<Person> {
+	public Person(int id1, String name) {
 
-	private int id;
-	private int age;
-	private String name;
-	
-	public Person(int id, String name, int age) {
-		this.id = id;
+		id = id1;
 		this.name = name;
-		this.age = age;
 	}
-	
-	@Override
-	public int compareTo(Person o) {
-		return id - o.id;
-	}
-
-	public int getId() {
-		return id;
-	}
-	
-	public int getAge() {
-		return age;
-	}
-	
-	public String getName() {
-		return name;
-	}
-
+	int id;
+	String name;
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -36,24 +15,27 @@ public class Person implements Comparable<Person> {
 		result = prime * result + id;
 		return result;
 	}
-
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
+		if (!(obj instanceof Person))
 			return false;
 		Person other = (Person) obj;
 		if (id != other.id)
 			return false;
 		return true;
 	}
-
 	@Override
-	public String toString() {
-		return "Person [id=" + id + ", name=" + name + ", age:" + age +"]";
+	public int compareTo(Person o) {
+
+		return id - o.id;
 	}
-	
+	public int getId() {
+		return id;
+	}
+	public String getName() {
+		return name;
+	}
+
 }
