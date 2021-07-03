@@ -25,11 +25,8 @@ public class ArrayList<T> extends AbstractList<T> {
 		
 		@Override
 		public void remove() {
-			var removingIndex = currentIndex - 1;
-			if (isValidIndex(removingIndex)) {
-				currentIndex--;
-				removeByIndex(removingIndex);
-			}
+			removeByIndex(currentIndex - 1);
+			currentIndex--;
 		}
 
 	}
