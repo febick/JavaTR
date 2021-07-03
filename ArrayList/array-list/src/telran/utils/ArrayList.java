@@ -27,13 +27,27 @@ public class ArrayList<T> extends AbstractList<T> {
 		public void remove() {
 			var removingIndex = currentIndex - 1;
 			if (isValidIndex(removingIndex)) {
-				size--;
 				currentIndex--;
-				System.arraycopy(array, removingIndex + 1, array, removingIndex, size - removingIndex);
-				array[size] = null;
+				removeByIndex(removingIndex);
 			}
 		}
 
+	}
+	
+	private void removeByIndex(int index) {
+		size--;
+		System.arraycopy(array, index + 1, array, index, size - index);
+		array[size] = null;
+	}
+	
+	@Override
+	public boolean remove(int index) {
+		boolean res = false;
+		if (isValidIndex(index)) {
+			removeByIndex(index);
+			res = true;
+		}
+		return res;
 	}
 
 	public ArrayList(int capacity) {
@@ -79,17 +93,7 @@ public class ArrayList<T> extends AbstractList<T> {
 		return res;
 	}
 
-	@Override
-	public boolean remove(int index) {
-		boolean res = false;
-		if (isValidIndex(index)) {
-			size--;
-			System.arraycopy(array, index + 1, array, index, size - index);
-			array[size] = null;
-			res = true;
-		}
-		return res;
-	}
+	
 
 	@Override
 	public boolean remove(T pattern) {
