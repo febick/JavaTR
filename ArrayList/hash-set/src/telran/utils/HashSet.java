@@ -123,6 +123,8 @@ public class HashSet<T> implements Set<T> {
 		var currentList = hashTable[index];
 		if (currentList != null) {
 			res = currentList.remove(pattern);
+		}
+		if (res) {
 			size--;
 		}
 		return res;
