@@ -2,6 +2,8 @@ package telran.utils;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.Iterator;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -13,23 +15,39 @@ Person p1 = new Person(1, "Moshe");
 Person p2 = new Person(2, "Alex");
 	@BeforeEach
 	void setUp() throws Exception {
-		setInt =  new HashSet<>(1);
-		setString = new HashSet<>();
+		setInt =  new TreeSet<>();
+		setString = new TreeSet<>();
 
 		setInt.add(1);
 		setInt.add(2);
 		setInt.add(3);
 		setInt.add(4);
 		setInt.add(5);
-		
+
 	}
+	
+//	@Test
+//	void iteratorSortTest() {
+//		int startOrder[] = new int[]{40, 30, 25, 27, 50, 45, 47, 55};
+//		for (int i = 0; i < startOrder.length; i++) {
+//			setInt.add(startOrder[i]);
+//		}	
+//		
+//		assertTrue(setInt.remove(40));
+//		
+//		for (Iterator iterator = setInt.iterator(); iterator.hasNext();) {
+//			var current = iterator.next();
+//			System.out.println(current);
+//		}
+//		
+//	}
+	
 	@Test
 	void containsTest() {
 		for(int i = 1; i < 6; i++) {
 			assertTrue(setInt.contains(i));
 		}
 		assertFalse(setInt.contains(100));
-		
 	}
 
 	@Test
@@ -38,7 +56,7 @@ Person p2 = new Person(2, "Alex");
 		assertTrue(setInt.add(6));
 		assertTrue(setInt.contains(6));
 		assertFalse(setInt.add(6));
-		Set<Person> persons = new HashSet<>();
+		Set<Person> persons = new TreeSet<>();
 		persons.add(p1);
 		persons.add(p2);
 	}
@@ -61,9 +79,6 @@ Person p2 = new Person(2, "Alex");
 		setInt.addAll(setInt);
 		
 		assertEquals(sizeOld , setInt.size());
-		
-		
-		
 		List<Integer> list = new LinkedList<>();
 		list.add(10);
 		list.add(200);
@@ -77,7 +92,7 @@ Person p2 = new Person(2, "Alex");
 		setInt.removeAll(setInt);
 		assertEquals(0, setInt.size());
 		setUp();
-		Set<Integer> patterns = new HashSet<>();
+		Set<Integer> patterns = new TreeSet<>();
 		patterns.add(2);
 		patterns.add(3);
 		setInt.removeAll(patterns);
@@ -91,9 +106,9 @@ Person p2 = new Person(2, "Alex");
 		setInt.retainAll(setInt);
 		assertEquals(5, setInt.size());
 		initialSetTest();
-		Set<Integer> patterns = new HashSet<>();
+		Set<Integer> patterns = new TreeSet<>();
 		patterns.add(2);
-		patterns.add(3);
+		patterns.add(3);		
 		setInt.retainAll(patterns);
 		assertTrue(setInt.contains(2));
 		assertTrue(setInt.contains(3));
@@ -101,9 +116,6 @@ Person p2 = new Person(2, "Alex");
 	}
 	
 
-
-	
-		 
 	
 	@Test
 	void removeIf() throws Exception {
@@ -127,7 +139,7 @@ Person p2 = new Person(2, "Alex");
 
 	private void initialSetTest() {
 		int value = 1;
-		for (int num: setInt) {
+		for (int num : setInt) {
 			assertEquals(num, value++);
 		}
 		assertEquals(6, value);
