@@ -2,86 +2,76 @@ package telran.utils;
 
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
-public class TreeSet<T> implements Set<T> {
-
-	private int size;
-	private Node<T> root;
-	private Comparator<T> comp;
-	
-	public TreeSet(Comparator<T> comp) {
-		this.comp = comp;
-	}
-	
-	@SuppressWarnings("unchecked")
-	public TreeSet() {
-		this((Comparator<T>)Comparator.naturalOrder());
-	}
-	
+public class TreeSet<T> implements SortedSet<T> {
 	private static class Node<T> {
 		T obj;
 		Node<T> left;
-		Node<T> rigth;
-		Node<T> parrent;
-		public Node (T obj) {
+		Node<T> right;
+		Node<T> parent;
+		Node (T obj) {
 			this.obj = obj;
 		}
 	}
-	
-	public Node<T> getMinNodeFrom(Node<T> node) {
-		Node<T> res = node;
-		while (res.left != null) {
-			res = res.left;
-		}
-		
-		if (res.rigth != null) {
-			res = res.rigth;
-		}
-		
-		return res;
-	}
-
-	
 	private class TreeSetIterator implements Iterator<T> {
-
-		Node<T> current = root;
-		Node<T> prev = current;
+		Node<T> currentNode;
+		Node<T> prevNode;
+		
+		public TreeSetIterator(Node<T> firstNode) {
+			currentNode = getLeastFrom(firstNode);
+		}
 		
 		public TreeSetIterator() {
-			current = getMinNodeFrom(root);
+			currentNode = getLeastFrom(root);
 		}
 		
 		@Override
 		public boolean hasNext() {
-			return current != null;
+			return currentNode != null;
 		}
 
 		@Override
 		public T next() {
-			prev = current;
-			
-			if (current.rigth != null) {
-				current = getMinNodeFrom(current.rigth);
-			} else {
-				current = getLeftParrent(current);
+			if (!hasNext()) {
+				throw new NoSuchElementException();
 			}
-			
-			return prev != current ? prev.obj : null;
-			
+			T res = currentNode.obj;
+			prevNode = currentNode;
+			updateCurrentNode();
+			return res;
 		}
 		
-		@Override
-		public void remove() {
-			TreeSet.this.removeNode(prev);
+		private void updateCurrentNode() {
+			currentNode = currentNode.right != null ?
+					getLeastFrom(currentNode.right) : getGreaterParent(currentNode);
 		}
 
-		private Node<T> getLeftParrent(Node<T> node) {
-			while (node.parrent != null && node.parrent.left != node) {
-				node = node.parrent;
+		private Node<T> getGreaterParent(Node<T> currentNode) {
+			while(currentNode.parent != null &&
+					currentNode.parent.left != currentNode) {
+				currentNode = currentNode.parent;
 			}
-			return node.parrent;
+			return currentNode.parent;
 		}
-		
+
+		@Override
+		public void remove() {
+			removeNode(prevNode);
+			if (isJunction(prevNode)) { currentNode = prevNode; }
+		}
+	}
+	
+	private Node<T> root;
+	private int size;
+	private Comparator<T> comp;
+	public TreeSet(Comparator<T> comp) {
+		this.comp = comp;
+	}
+
+	@SuppressWarnings("unchecked")
+	public TreeSet() {
+		this((Comparator<T>)Comparator.naturalOrder());
 	}
 	
 	@Override
@@ -91,6 +81,7 @@ public class TreeSet<T> implements Set<T> {
 
 	@Override
 	public int size() {
+
 		return size;
 	}
 
@@ -99,113 +90,165 @@ public class TreeSet<T> implements Set<T> {
 		if (root == null) {
 			root = new Node<>(obj);
 		} else {
-			Node<T> parrent = getParrent(obj); // if null means obj exist
-			if (parrent == null) { 
-				return false; 
+			Node<T> parent = getParent(obj);//returning null means the object exists
+			if (parent == null) {
+				return false;
 			}
 			Node<T> node = new Node<>(obj);
-			if (comp.compare(obj, parrent.obj) > 0) {
-				parrent.rigth = node;
+			if (comp.compare(obj, parent.obj) > 0) {
+				parent.right = node;
 			} else {
-				parrent.left = node;
+				parent.left = node;
 			}
-			node.parrent = parrent;
+			node.parent = parent;
+
 		}
 		size++;
 		return true;
 	}
 
-	private Node<T> getParrent(T obj) {
+	private Node<T> getParent(T obj) {
 		Node<T> current = root;
-		Node<T> parrent = null;
-		while (current != null) {
-			parrent = current;
+		Node<T> parent = null;
+		while(current != null) {
+			parent = current;
 			int compRes = comp.compare(obj, current.obj);
 			if (compRes == 0) {
 				return null;
 			}
-			current = compRes > 0 ? current.rigth : current.left;
+			current = compRes > 0 ? current.right : current.left;
 		}
-		return parrent;
+		return parent;
 	}
-
 	@Override
 	public boolean remove(T pattern) {
-		if (contains(pattern)) {
-			return removeNode(getNode(pattern));
-		} else {
-			return false;
-		}
-	}
-	
-	private Node<T> getNode(T obj) {
-		Node<T> res = root;
-		while (res != null) {
-			int compRes = comp.compare(obj, res.obj);
-			if (compRes == 0) {
-				return res;
-			}
-			res = compRes > 0 ? res.rigth : res.left;
-		}
-		return null;
-	}
-	
-	private boolean isJunction(Node<T> node) {
-		return (node.left != null || node.rigth != null) && node.parrent != null;
-	}
-	
-	private boolean isTail(Node<T> node) {
-		return node.left == null && node.rigth == null;
-	}
-	
-	private boolean isRoot(Node<T> node) {
-		return node.parrent == null;
-	}
-
-	private boolean removeNode(Node<T> nodeToRemove) {
+		Node<T> node = getNode(pattern);
 		boolean res = false;
-		
-		if (isTail(nodeToRemove)) {
-			detach(nodeToRemove);
+		if (node != null) {
+			removeNode(node);
 			res = true;
 		}
-		
-		if (isJunction(nodeToRemove)) {
-			Node<T> minNode = null;
-
-			if (nodeToRemove.left != null) {
-				minNode = getMinNodeFrom(nodeToRemove.left);
-			} else {
-				minNode = getMinNodeFrom(nodeToRemove.rigth);
-			}
-			
-			nodeToRemove.obj = minNode.obj;
-			detach(minNode);
-			res = true;
-		}
-		
-		if (isRoot(nodeToRemove)) {
-			Node<T> newRoot = getMinNodeFrom(nodeToRemove.rigth);
-			nodeToRemove.obj = newRoot.obj;
-			detach(newRoot);
-			res = true;
-		}
-		
 		return res;
 	}
 
-	private void detach(Node<T> node) {
-		if (node.parrent.left == node) {
-			node.parrent.left = null;
-		} else {
-			node.parrent.rigth = null;
-		}
+	private void removeNode(Node<T> node) {
 		size--;
+		if (isJunction(node)) {
+			removeJunction(node);
+		} else {
+			removeNonJunction(node);
+		}
+
+	}
+	private void removeNonJunction(Node<T> node) {
+		Node<T> child = node.left != null ? node.left : node.right;
+		Node<T> parent = node.parent;
+		if (child != null) {
+			child.parent = parent;
+		}
+		if (parent == null) {
+			root = child;
+
+		} else if (parent.left == node) {
+			parent.left = child;
+		} else parent.right = child;
+
+
+	}
+	private void removeJunction(Node<T> node) {
+		Node<T> substitute = getLeastFrom(node.right);
+		node.obj = substitute.obj;
+		removeNonJunction(substitute);
+
+	}
+	private Node<T> getLeastFrom(Node<T> node) {
+		while(node.left != null) {
+			node = node.left;
+		}
+		return node;
+	}
+	private boolean isJunction(Node<T> node) {
+
+		return node.left != null && node.right != null;
+	}
+	private Node<T> getNode(T pattern) {
+		int res = 0;
+		Node<T> current = root;
+		while(current != null &&
+				(res = comp.compare(pattern, current.obj)) != 0) {
+			current = res < 0 ? current.left : current.right;
+		}
+		return current;
 	}
 
 	@Override
+	public T floor(T element) {
+		Node<T> node = getNode(element);
+		return node != null ? node.obj : find(element, true);
+	}
+	
+	@Override
+	public T ceiling(T element) {
+		Node<T> node = getNode(element);
+		return node != null ? node.obj : find(element, false);
+	}
+	
+	private T find(T element, boolean isFloor) {
+		var node = root;
+		T current = null;
+
+		while (node != null && !element.equals(current)) {
+			if (comparing(node, element, isFloor)) {
+				current = node.obj;
+				node = isFloor ? node.right : node.left;
+			} else {
+				node = isFloor ? node.left : node.right;
+			}
+		}
+		
+		return current;
+	}
+	
+	private boolean comparing(Node<T> node, T element, boolean isFloor) {
+		if (isFloor) {
+			return comp.compare(node.obj, element) <= 0;
+		} else {
+			return comp.compare(node.obj, element) >= 0;
+		}
+	}
+
+	@Override
+	public SortedSet<T> subSet(T fromElement, boolean fromInclusive, T toElement, boolean toInclusive) {
+		
+		SortedSet<T> res = new TreeSet<>();
+		var firstNode = getNode(fromElement);
+		var firstElement = firstNode.obj;
+		T nextObject = null;
+		var it = new TreeSetIterator(firstNode);
+		
+		if (fromInclusive) {
+			res.add(firstElement);
+		}
+		
+		while (it.hasNext()) {
+			nextObject = it.next();
+			if (comp.compare(nextObject, toElement) == -1) {
+				res.add(nextObject);
+			} else {
+				break;
+			}
+		}
+		
+		if (toInclusive) {
+			res.add(nextObject);
+		}
+
+		return res;
+	}
+	
+	@Override
 	public boolean contains(T pattern) {
-		return root != null && getParrent(pattern) == null;
+		return root != null && getParent(pattern) == null;
 	}
 
 	@Override
