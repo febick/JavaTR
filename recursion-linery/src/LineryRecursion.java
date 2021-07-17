@@ -9,12 +9,12 @@ public class LineryRecursion {
 		if (power == 0) { return 1; }
 		if (power == 1) { return current; }
 		if (current == 0) { current = value; }
-		return powR(value, power - 1, multiplay(current, value));
+		return powR(value, power - 1, multiply(current, value));
 	}
 
-	public static int multiplay(int value, int count) {
+	public static int multiply(int value, int count) {
 		if (count == 1) { return value; }
-		return value + multiplay(value, count - 1);
+		return value + multiply(value, count - 1);
 	}
 
 	public static int sum(int ar[]) {
