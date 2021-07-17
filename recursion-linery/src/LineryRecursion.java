@@ -12,7 +12,7 @@ public class LineryRecursion {
 		return powR(value, power - 1, multiply(current, value));
 	}
 
-	public static int multiply(int value, int count) {
+	private static int multiply(int value, int count) {
 		if (count == 1) { return value; }
 		return value + multiply(value, count - 1);
 	}
@@ -42,7 +42,7 @@ public class LineryRecursion {
 		return isSubstring(str.substring(1), substr); 
 	}
 
-	public static boolean isEqual(String str, String substr) {
+	private static boolean isEqual(String str, String substr) {
 		if (str.charAt(0) == substr.charAt(0)) {
 			if (str.length() == 1) { return true; }
 			return isEqual(str.substring(1), substr.substring(1));                
