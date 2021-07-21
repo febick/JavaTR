@@ -42,6 +42,10 @@ public class TreeSet<T> implements SortedSet<T> {
 			return res;
 		}
 		
+		public Node<T> getCurrentNode() {
+			return currentNode;
+		}
+		
 		private void updateCurrentNode() {
 			currentNode = currentNode.right != null ?
 					getLeastFrom(currentNode.right) : getGreaterParent(currentNode);
@@ -57,8 +61,8 @@ public class TreeSet<T> implements SortedSet<T> {
 
 		@Override
 		public void remove() {
-			removeNode(prevNode);
 			if (isJunction(prevNode)) { currentNode = prevNode; }
+			removeNode(prevNode);
 		}
 	}
 	
@@ -220,8 +224,14 @@ public class TreeSet<T> implements SortedSet<T> {
 	@Override
 	public SortedSet<T> subSet(T fromElement, boolean fromInclusive, T toElement, boolean toInclusive) {
 		
-		SortedSet<T> res = new TreeSet<>();
 		var firstNode = getNode(fromElement);
+		
+		if (firstNode == null) {
+			System.out.println("fromElement isn't exist"); // TODO 
+			return null;
+		}
+		
+		SortedSet<T> res = new TreeSet<>(comp);
 		var firstElement = firstNode.obj;
 		T nextObject = null;
 		var it = new TreeSetIterator(firstNode);
@@ -256,5 +266,62 @@ public class TreeSet<T> implements SortedSet<T> {
 		root = null;
 		size = 0;
 	}
+
+	// Находим длину левого и правого дерева, к большему прибаляем едницу и возвращаем
+	public Integer height() {
+		return height(root);
+	}
+
+	private Integer height(Node<T> nodeRoot) {
+		int res = 0;
+		if (nodeRoot != null) {
+			int heightLeft = height(nodeRoot.left);
+			int heightRight = height(nodeRoot.right);
+			res = Math.max(heightLeft, heightRight) + 1;
+		}
+		return res;
+	}
+
+	public Integer width() {
+		return width(root);
+	}
+
+	private Integer width(Node<T> nodeRoot) {
+		if (nodeRoot == null) { return 0; }
+		if (nodeRoot.left == null && nodeRoot.right == null) {return 1; } 
+		int widthLeft = width(nodeRoot.left);
+		int widthRight = width(nodeRoot.right);
+		return widthLeft + widthRight;
+	}
+
+	
+	public void balance() {
+		var ar = getSortedNodeArray();
+		root = getRoot(ar, 0, size - 1, null);
+	}
+	
+	@SuppressWarnings("unchecked")
+	private Node<T>[] getSortedNodeArray() {
+		Node<T> ar[] = new Node[size()];
+		var it = new TreeSetIterator();
+		var index = 0;
+		while (it.hasNext()) {
+			ar[index++] = it.getCurrentNode();
+			it.next();
+		}
+		return ar;
+	}
+	
+	private Node<T> getRoot(Node<T>[] ar, int left, int right, Node<T> parent) {
+		if (left > right) { return null; }
+		var middle = (left + right) / 2;
+		var newRoot = ar[middle];
+		newRoot.parent = parent;
+		newRoot.left = getRoot(ar, left, middle - 1, newRoot);
+		newRoot.right = getRoot(ar, middle + 1, right, newRoot);
+		return newRoot; 
+	}
+	
+	
 
 }
