@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 public class TreeSet<T> implements SortedSet<T> {
+	
 	private static class Node<T> {
 		T obj;
 		Node<T> left;
@@ -85,7 +86,6 @@ public class TreeSet<T> implements SortedSet<T> {
 
 	@Override
 	public int size() {
-
 		return size;
 	}
 
@@ -94,34 +94,35 @@ public class TreeSet<T> implements SortedSet<T> {
 		if (root == null) {
 			root = new Node<>(obj);
 		} else {
-			Node<T> parent = getParent(obj);//returning null means the object exists
-			if (parent == null) {
-				return false;
-			}
+			Node<T> parent = getParent(obj); //returning null means the object exists
+			if (parent == null) { return false; }
+			
 			Node<T> node = new Node<>(obj);
 			if (comp.compare(obj, parent.obj) > 0) {
 				parent.right = node;
 			} else {
 				parent.left = node;
 			}
+			
 			node.parent = parent;
-
 		}
+	
 		size++;
 		return true;
 	}
 
 	private Node<T> getParent(T obj) {
+		var counter = 0;
 		Node<T> current = root;
 		Node<T> parent = null;
 		while(current != null) {
+			counter++;
 			parent = current;
 			int compRes = comp.compare(obj, current.obj);
-			if (compRes == 0) {
-				return null;
-			}
+			if (compRes == 0) { return null; }
 			current = compRes > 0 ? current.right : current.left;
 		}
+		balanceIfNeedIt(counter);
 		return parent;
 	}
 	@Override
@@ -267,7 +268,6 @@ public class TreeSet<T> implements SortedSet<T> {
 		size = 0;
 	}
 
-	// Находим длину левого и правого дерева, к большему прибаляем едницу и возвращаем
 	public Integer height() {
 		return height(root);
 	}
@@ -322,6 +322,17 @@ public class TreeSet<T> implements SortedSet<T> {
 		return newRoot; 
 	}
 	
+	private static int log(int number) {
+	    return number == 1 ? 0 : log(number / 2) + 1;
+	}
 	
+	private void balanceIfNeedIt(int countOfSteps) {
+		var log2 = log(size);
+		if (countOfSteps > log2 && log2 != 0) { 
+			if(countOfSteps > log(size) * 1.2) { 
+				balance(); 
+			}
+		} 
+	}
 
 }
