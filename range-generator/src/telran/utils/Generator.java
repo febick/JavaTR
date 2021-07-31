@@ -9,6 +9,10 @@ public class Generator {
 	}
 	
 	public int[] generate(int number, int min, int max) {
+		if (rule == null) {
+			throw new IllegalArgumentException("You must set rule before use generate method.");
+		}
+		
 		int[] res = new int[number];
 		int counter = 0;
 		
