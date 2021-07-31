@@ -1,0 +1,29 @@
+package telran.utils;
+
+public class Generator {
+
+	private Rule rule;
+	
+	public void setRule(Rule rule) {
+		this.rule = rule;
+	}
+	
+	public int[] generate(int number, int min, int max) {
+		int[] res = new int[number];
+		int counter = 0;
+		
+		while (counter != number) {
+			int random = min + (int) (Math.random() * max);
+			try {
+				rule.check(random, min, max);
+				res[counter] = random;
+			} catch (NoRuleMatchException e) {
+				res[counter] = random + e.getDelta();;
+			}
+			counter++;
+		}
+		
+		return res;
+	}
+	
+}
