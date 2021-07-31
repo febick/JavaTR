@@ -51,13 +51,32 @@ class RangeGenertorTest {
 			assertEquals(correctLeftDelta, e.getDelta());
 		}
 	}
-	
+
+	@Test
+	void noFitValueTest() {
+		Rule rule = new DividerRule(10);
+		try {
+			rule.check(22, 21, 24);
+		} catch (NoRuleMatchException e) {
+			assertEquals(0, e.getDelta());
+		}
+		
+		Generator generator = new Generator();
+		generator.setRule(rule);
+		var range = generator.generate(5, 21, 24);
+		
+		for (int i : range) {
+			assertEquals(0, i);
+		}
+
+	}
+
 	@Test
 	void generatorTest() {
 		Rule rule = new DividerRule(3);
 		Generator generator = new Generator();
 		generator.setRule(rule);
-		
+
 		var range = generator.generate(5, 10, 40);
 
 		for (int value : range) {
@@ -68,7 +87,7 @@ class RangeGenertorTest {
 				fail();
 			}
 		}
-		
+
 	}
 
 }

@@ -18,7 +18,8 @@ public class Generator {
 				rule.check(random, min, max);
 				res[counter] = random;
 			} catch (NoRuleMatchException e) {
-				res[counter] = random + e.getDelta();;
+				int delta = e.getDelta();
+				res[counter] = delta != 0 ? random + e.getDelta() : 0;
 			}
 			counter++;
 		}
