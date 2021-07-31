@@ -13,6 +13,8 @@ public class DividerRule implements Rule {
 	@Override
 	public void check(int number, int min, int max) throws NoRuleMatchException {
 		if (min >= max) { throw new IllegalArgumentException("Min can't be greater or equal than max.");}
+		if (min < 0 || max < 0) { throw new IllegalArgumentException("Range arguments can't be less than 0."); } 
+		if (number < 0) { throw new IllegalArgumentException("Number can't be less than 0.");  }
 		this.min = min;
 		this.max = max;
 

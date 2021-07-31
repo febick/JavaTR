@@ -12,7 +12,7 @@ class RangeGenertorTest {
 
 		// Check correct value
 		try {
-			rule.check(16, 2, 20);
+			rule.check(16, 0, 20);
 		} catch (NoRuleMatchException e) {
 			fail();
 		} 
@@ -26,6 +26,25 @@ class RangeGenertorTest {
 		} catch (IllegalArgumentException e) {
 			assertEquals("Min can't be greater or equal than max.", e.getMessage());
 		}
+		
+		try {
+			rule.check(10, -10, 20);
+			fail();
+		} catch (NoRuleMatchException e) {
+			fail();
+		} catch (IllegalArgumentException e) {
+			assertEquals("Range arguments can't be less than 0.", e.getMessage());
+		}
+		
+		try {
+			rule.check(-16, 0, 20);
+			fail();
+		} catch (NoRuleMatchException e) {
+			fail();
+		} catch (IllegalArgumentException e) {
+			assertEquals("Number can't be less than 0.", e.getMessage());
+		}
+		
 	}
 
 	@Test
@@ -83,8 +102,7 @@ class RangeGenertorTest {
 			try {
 				rule.check(value, 10, 40);
 			} catch (NoRuleMatchException e) {
-				System.out.println("Fail in value " + value);
-				fail();
+				fail("Fail in value " + value);
 			}
 		}
 
