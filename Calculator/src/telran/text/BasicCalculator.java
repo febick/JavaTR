@@ -9,8 +9,8 @@ public class BasicCalculator {
 		}
 
 		String cleanExpression = expression.replaceAll("\\s", "");
-		String[] numbers = cleanExpression.trim().split("\\D+");
-		String[] operators = cleanExpression.trim().split("\\d+");
+		String[] numbers = cleanExpression.split("\\D+");
+		String[] operators = cleanExpression.split("\\d+");
 
 		int currentNumberIndex = 0;
 		int sum = Integer.parseInt(numbers[currentNumberIndex]);
@@ -20,7 +20,6 @@ public class BasicCalculator {
 			var operator = operators[usedOperator++];
 			var value = numbers[++currentNumberIndex];
 
-			
 			if (operator.equals("+")) {
 				sum = add(sum, Integer.parseInt(value));
 			} else if (operator.equals("-")) {
