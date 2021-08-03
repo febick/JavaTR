@@ -52,8 +52,7 @@ public class BasicCalculator {
 	}
 
 	public static int divide(int op1, int op2) {
-		if (op2 == 0) { return Integer.MAX_VALUE; }
-		return op1 / op2;
+		return op2 == 0 ? Integer.MAX_VALUE : op1 / op2;
 	}
 
 }
