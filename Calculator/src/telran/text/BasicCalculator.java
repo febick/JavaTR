@@ -19,7 +19,7 @@ public class BasicCalculator {
 		while (usedOperator < operators.length) {
 			var operator = operators[usedOperator++];
 			var value = numbers[++currentNumberIndex];
-
+			
 			if (operator.equals("+")) {
 				sum = add(sum, Integer.parseInt(value));
 			} else if (operator.equals("-")) {
@@ -30,7 +30,7 @@ public class BasicCalculator {
 				sum = divide(sum, Integer.parseInt(value));
 				if (sum == Integer.MAX_VALUE) { break; }
 			} else {
-				throw new IllegalArgumentException("Unknown operator");
+				throw new RuntimeException("Used unknown operator");
 			}
 			
 		}
