@@ -20,6 +20,7 @@ public class BasicCalculator {
 			var operator = operators[usedOperator++];
 			var value = numbers[++currentNumberIndex];
 
+			
 			if (operator.equals("+")) {
 				sum = add(sum, Integer.parseInt(value));
 			} else if (operator.equals("-")) {
@@ -29,6 +30,8 @@ public class BasicCalculator {
 			} else if (operator.equals("/"))  {
 				sum = divide(sum, Integer.parseInt(value));
 				if (sum == Integer.MAX_VALUE) { break; }
+			} else {
+				throw new IllegalArgumentException("Unknown operator");
 			}
 			
 		}
