@@ -6,10 +6,12 @@ import java.time.temporal.TemporalAdjusters;
 
 public class PrintCalendarAppl {
 	
-	private static LocalDate currentDay = LocalDate.now();
-	private static int amountOfDays = currentDay.with(TemporalAdjusters.lastDayOfMonth()).getDayOfMonth();
+	private static LocalDate currentDay;
+	private static int amountOfDays;
 	
 	public static void printCalendar() {
+		currentDay = LocalDate.now();
+		currentDay.with(TemporalAdjusters.lastDayOfMonth()).getDayOfMonth();
 		printCalendar(currentDay.getMonth().getValue(), currentDay.getYear());
 	}
 
