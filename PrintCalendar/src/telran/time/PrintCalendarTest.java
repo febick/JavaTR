@@ -9,9 +9,9 @@ class PrintCalendarTest {
 
 	@Test
 	void printCalendarTest() {
-		PrintCalendarAppl.printCalendar();
-//		PrintCalendarAppl.printCalendar(1, 2022);
-//		PrintCalendarAppl.printCalendar(2022);
+//		PrintCalendarAppl.printCalendar();
+//		PrintCalendarAppl.printCalendar(2, 2021);
+		PrintCalendarAppl.printCalendar(2021);
 	}
 
 }
