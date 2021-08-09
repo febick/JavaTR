@@ -25,7 +25,7 @@ public class PrintCalendarAppl {
 			} else if (args.length == 2) {
 				printCalendar(Integer.parseInt(args[0]), Integer.parseInt(args[1]));
 			} else if (args.length == 3) {
-				firstDayOfWeek = DayOfWeek.of(castToDayOfWeek(args[2]));
+				firstDayOfWeek = DayOfWeek.valueOf(args[2].toUpperCase());
 				lastDayOfWeek = findNewLastDay(firstDayOfWeek.getValue());
 				printCalendar(Integer.parseInt(args[0]), Integer.parseInt(args[1]));
 			}
@@ -33,17 +33,6 @@ public class PrintCalendarAppl {
 			System.out.println(e.getLocalizedMessage());
 		}
 		
-	}
-	
-	private static int castToDayOfWeek(String value) {
-		String[] names = {"", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"};
-		var chekedString = value.toUpperCase();
-		for (int i = 0; i < names.length; i++) {
-			if (chekedString.equals(names[i])) {
-				return i;
-			}
-		}
-		return 1;
 	}
 
 	private static DayOfWeek findNewLastDay(int newFirstDay) {
