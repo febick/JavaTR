@@ -24,13 +24,13 @@ class EmployeesMethodsMapsImplTest {
 
 	@Test
 	void testAddEmploee() {
-		assertEquals(EmployeesCodes.OK, database.addEmploee(defaultEmployee));
-		assertEquals(EmployeesCodes.ALREADY_EXISTS, database.addEmploee(defaultEmployee));
+		assertEquals(EmployeesCodes.OK, database.addEmployee(defaultEmployee));
+		assertEquals(EmployeesCodes.ALREADY_EXISTS, database.addEmployee(defaultEmployee));
 	}
 
 	@Test
 	void testRemoveEmployee() {
-		database.addEmploee(defaultEmployee);
+		database.addEmployee(defaultEmployee);
 		assertEquals(EmployeesCodes.OK, database.removeEmployee(defaultEmployee.getId()));
 		assertEquals(EmployeesCodes.NOT_FOUND, database.removeEmployee(defaultEmployee.getId()));
 	}
@@ -38,7 +38,7 @@ class EmployeesMethodsMapsImplTest {
 	@Test
 	void testUpdateSalary() {
 		assertEquals(EmployeesCodes.NOT_FOUND, database.updateSalary(0, 0));
-		database.addEmploee(defaultEmployee);
+		database.addEmployee(defaultEmployee);
 		assertEquals(EmployeesCodes.OK, database.updateSalary(defaultEmployee.getId(), 50000));
 		assertEquals(50000, database.getEmployee(defaultEmployee.getId()).getSalary());
 	}
@@ -46,7 +46,7 @@ class EmployeesMethodsMapsImplTest {
 	@Test
 	void testUpdateDepartment() {
 		assertEquals(EmployeesCodes.NOT_FOUND, database.updateDepartment(0, "PR"));
-		database.addEmploee(defaultEmployee);
+		database.addEmployee(defaultEmployee);
 		assertEquals(EmployeesCodes.OK, database.updateDepartment(defaultEmployee.getId(), "PR"));
 		assertEquals("PR", database.getEmployee(defaultEmployee.getId()).getDepartment());
 	}
@@ -54,13 +54,18 @@ class EmployeesMethodsMapsImplTest {
 	@Test
 	void testGetEmployee() {
 		assertNull(database.getEmployee(0));
-		database.addEmploee(defaultEmployee);
+		database.addEmployee(defaultEmployee);
 		assertEquals(defaultEmployee, database.getEmployee(defaultEmployee.getId()));
 	}
 
 	@Test
 	void testGetEmployessBySalary() {
 		fillDatabase();
+		try {
+			database.getEmployessBySalary(1, 0);
+			fail();
+		} catch (Exception e) {}
+
 		var result = database.getEmployessBySalary(2000, 8000).iterator();
 		result.forEachRemaining(e -> {
 			var salary = e.getSalary();
@@ -74,9 +79,8 @@ class EmployeesMethodsMapsImplTest {
 		try {
 			database.getEmployeesByAge(40, 10);
 			fail();
-		} catch (Exception e) {
-			
-		}		
+		} catch (Exception e) {}	
+		
 		var result = database.getEmployeesByAge(25, 40).iterator();
 		var currentYear = LocalDate.now().getYear();
 		result.forEachRemaining(e -> {
@@ -109,7 +113,7 @@ class EmployeesMethodsMapsImplTest {
 		list.add(new Employee(3, 5000, LocalDate.of(1992, 11, 5), "PR"));
 		list.add(new Employee(4, 5000, LocalDate.of(1996, 11, 5), "PR"));
 		list.add(new Employee(5, 2500, LocalDate.of(2001, 11, 5), "QA"));
-		list.forEach(database::addEmploee);
+		list.forEach(database::addEmployee);
 	}
 
 }

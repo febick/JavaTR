@@ -13,23 +13,24 @@ public class EmployeesMethodsMapsImpl implements EmployeesMethods {
 	private TreeMap<Integer, List<Employee>> employeesAge = new TreeMap<>();
 
 	@Override
-	public EmployeesCodes addEmploee(Employee employee) {
+	public EmployeesCodes addEmployee(Employee employee) {
 		var result = employees.putIfAbsent(employee.getId(), employee);
-		addEmploeeDep(employee);
-		addEmploeeSalary(employee);
-		addEmploeeAge(employee);
-		return result != null ? EmployeesCodes.ALREADY_EXISTS : EmployeesCodes.OK;
+		if (result != null) { return EmployeesCodes.ALREADY_EXISTS; }
+		addEmployeeDep(employee);
+		addEmployeeSalary(employee);
+		addEmployeeAge(employee);
+		return EmployeesCodes.OK;
 	}
 
-	private void addEmploeeAge(Employee employee) {
+	private void addEmployeeAge(Employee employee) {
 		employeesAge.computeIfAbsent(employee.getBirthDate().getYear(), __ -> new LinkedList<>()).add(employee);
 	}
 
-	private void addEmploeeSalary(Employee employee) {
+	private void addEmployeeSalary(Employee employee) {
 		employeesSalary.computeIfAbsent(employee.getSalary(), __ -> new LinkedList<Employee>()).add(employee);
 	}
 
-	private void addEmploeeDep(Employee employee) {
+	private void addEmployeeDep(Employee employee) {
 		employeesDep.computeIfAbsent(employee.getDepartment(), __ -> new LinkedList<Employee>()).add(employee);
 	}
 
@@ -90,7 +91,7 @@ public class EmployeesMethodsMapsImpl implements EmployeesMethods {
 	
 	private void replaceEmployee(Employee replacingEmploeey, Employee newEmploeey) {
 		removeEmployee(replacingEmploeey.getId());
-		addEmploee(newEmploeey);
+		addEmployee(newEmploeey);
 	}
 
 	@Override
@@ -100,6 +101,7 @@ public class EmployeesMethodsMapsImpl implements EmployeesMethods {
 
 	@Override
 	public Iterable<Employee> getEmployessBySalary(int fromInclusive, int toExclusive) {
+		if (toExclusive < fromInclusive) { throw new IllegalArgumentException(); }
 		List<Employee> result = new ArrayList<>();
 		employeesSalary.subMap(fromInclusive, toExclusive).values().forEach(result::addAll);
 		return result;
