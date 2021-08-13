@@ -79,11 +79,6 @@ public class EmployeesMethodsMapsImpl implements EmployeesMethods {
 		return EmployeesCodes.OK;
 	}
 
-	private void replaceEmployee(Employee replacingEmploeey, Employee newEmploeey) {
-		removeEmployee(replacingEmploeey.getId());
-		addEmploee(newEmploeey);
-	}
-
 	@Override
 	public EmployeesCodes updateDepartment(long id, String newDepartment) {
 		var replacingEmploeey = getEmployee(id);
@@ -91,6 +86,11 @@ public class EmployeesMethodsMapsImpl implements EmployeesMethods {
 		Employee newEmploeey = new Employee(id, replacingEmploeey.getSalary(), replacingEmploeey.getBirthDate(), newDepartment);
 		replaceEmployee(replacingEmploeey, newEmploeey);
 		return EmployeesCodes.OK;
+	}
+	
+	private void replaceEmployee(Employee replacingEmploeey, Employee newEmploeey) {
+		removeEmployee(replacingEmploeey.getId());
+		addEmploee(newEmploeey);
 	}
 
 	@Override

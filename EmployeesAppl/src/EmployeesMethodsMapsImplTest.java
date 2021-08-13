@@ -78,8 +78,9 @@ class EmployeesMethodsMapsImplTest {
 			
 		}		
 		var result = database.getEmployeesByAge(25, 40).iterator();
+		var currentYear = LocalDate.now().getYear();
 		result.forEachRemaining(e -> {
-			var currentAge = LocalDate.now().getYear() - e.getBirthDate().getYear();
+			var currentAge = currentYear - e.getBirthDate().getYear();
 			assertTrue(currentAge >= 25 && currentAge <= 40);
 		});
 	}
