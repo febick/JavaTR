@@ -1,6 +1,6 @@
-package telran.emploees.services;
+package telran.employees.services;
 
-import telran.emploees.dto.*;
+import telran.employees.dto.*;
 
 public interface EmployeesMethods {
 

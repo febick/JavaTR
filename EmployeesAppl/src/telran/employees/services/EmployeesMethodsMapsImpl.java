@@ -1,9 +1,10 @@
-package telran.emploees.services;
+package telran.employees.services;
 
 import java.time.LocalDate;
 import java.util.*;
-import telran.emploees.dto.Employee;
-import telran.emploees.dto.EmployeesCodes;
+
+import telran.employees.dto.Employee;
+import telran.employees.dto.EmployeesCodes;
 
 public class EmployeesMethodsMapsImpl implements EmployeesMethods {
 
@@ -114,9 +115,9 @@ public class EmployeesMethodsMapsImpl implements EmployeesMethods {
 		}
 		List<Employee> result = new ArrayList<>();
 		var currentYear = LocalDate.now().getYear();
-		var minYear = toExclusive - currentYear;
-		var maxYear = fromInclusive - currentYear;		
-		employeesAge.subMap(-minYear, -maxYear).values().forEach(result::addAll);
+		var minYear = currentYear - toExclusive;
+		var maxYear = currentYear - fromInclusive;		
+		employeesAge.subMap(minYear, maxYear).values().forEach(result::addAll);
 		return result;
 	}
 

@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import telran.emploees.dto.Employee;
+import telran.employees.dto.Employee;
 
 class EmployeeTest {
 	

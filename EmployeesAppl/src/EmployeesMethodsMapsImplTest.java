@@ -7,9 +7,9 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import telran.emploees.dto.Employee;
-import telran.emploees.dto.EmployeesCodes;
-import telran.emploees.services.EmployeesMethodsMapsImpl;
+import telran.employees.dto.Employee;
+import telran.employees.dto.EmployeesCodes;
+import telran.employees.services.EmployeesMethodsMapsImpl;
 
 class EmployeesMethodsMapsImplTest {
 	
@@ -104,6 +104,14 @@ class EmployeesMethodsMapsImplTest {
 		fillDatabase();
 		var it = database.getAllEmployees().iterator();
 		for (int i = 0; i < 5; i++) { assertEquals(list.get(i), it.next()); }
+	}
+	
+	@Test
+	void testRemoveAll() {
+		fillDatabase();
+		list.forEach(e -> {
+			assertEquals(EmployeesCodes.OK, database.removeEmployee(e.getId()));
+		});
 	}
 	
 	void fillDatabase() {
