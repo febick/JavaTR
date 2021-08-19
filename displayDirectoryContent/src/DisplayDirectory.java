@@ -22,9 +22,7 @@ public class DisplayDirectory {
                 .walk(Paths.get(directoryPath),
                         maxLevel < 0 ? Integer.MAX_VALUE : maxLevel,
                         FileVisitOption.FOLLOW_LINKS)) {
-                    walk.map(obj -> obj.toString())
-                        .collect(Collectors.toList())
-                        .forEach(DisplayDirectory::printFileName);
+                    walk.map(obj -> obj.toString()).forEach(DisplayDirectory::printFileName);
         } catch (IOException e) {
             e.getLocalizedMessage();
         }
