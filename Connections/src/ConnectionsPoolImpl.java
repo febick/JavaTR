@@ -30,9 +30,13 @@ public class ConnectionsPoolImpl implements ConnectionsPool {
 
         public void add(Connection connection) {
             Node newNode = new Node(connection);
-            newNode.next = head;
-            head.prev = newNode;
-            head = newNode;
+            if (head != null) {
+                newNode.next = head;
+                head.prev = newNode;
+                head = newNode;
+            } else {
+                head = tail = newNode;
+            }
             map.put(connection.getId(), newNode);
             size++;
         }
