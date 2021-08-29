@@ -19,7 +19,7 @@ class EmployeesMethodsMapsImplTest {
 
 	@BeforeEach
 	void setUp() {
-		database = new EmployeesMethodsMapsImpl();
+		database = (EmployeesMethodsMapsImpl) EmployeesMethodsMapsImpl.getEmptyEmloyees();
 	}
 
 	@Test
@@ -61,12 +61,8 @@ class EmployeesMethodsMapsImplTest {
 	@Test
 	void testGetEmployessBySalary() {
 		fillDatabase();
-		try {
-			database.getEmployessBySalary(1, 0);
-			fail();
-		} catch (Exception e) {}
-
 		var result = database.getEmployessBySalary(2000, 8000).iterator();
+		if (result.hasNext() == false) { fail(); }
 		result.forEachRemaining(e -> {
 			var salary = e.getSalary();
 			assertTrue(salary >= 2000 && salary <= 8000);
@@ -76,12 +72,8 @@ class EmployeesMethodsMapsImplTest {
 	@Test
 	void testGetEmployeesByAge() {
 		fillDatabase();
-		try {
-			database.getEmployeesByAge(40, 10);
-			fail();
-		} catch (Exception e) {}	
-		
 		var result = database.getEmployeesByAge(25, 40).iterator();
+		if (result.hasNext() == false) { fail(); }
 		var currentYear = LocalDate.now().getYear();
 		result.forEachRemaining(e -> {
 			var currentAge = currentYear - e.getBirthDate().getYear();
@@ -112,6 +104,13 @@ class EmployeesMethodsMapsImplTest {
 		list.forEach(e -> {
 			assertEquals(EmployeesCodes.OK, database.removeEmployee(e.getId()));
 		});
+	}
+	
+	@Test
+	void getAvarageSalariesTest() {
+		fillDatabase();
+		database.getDepartmentsSalary();
+		database.distibutionSalary(1000);
 	}
 	
 	void fillDatabase() {
