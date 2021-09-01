@@ -27,13 +27,17 @@ public class Menu implements Item {
 	public void perform(InputOutput io) {
 		displayTitle(io);
 		while (true) {
+			io.writeObjectLine("\nAction items:\n");
 			displayItems(io);
-			int itemNumber = io.readInt("Select action item.\n", 1, items.size());
-			Item item = items.get(itemNumber - 1);
 			try {
+				int itemNumber = io.readInt("\nSelect action item:\n", 1, items.size());
+				Item item = items.get(itemNumber - 1);
 				item.perform(io);
 				if (item.isExit()) { break; }
-			} catch (Throwable e) {
+			} catch (EndOfInputException e) {
+				io.writeObjectLine("\nExit from menu by the user. Changes was saved.");
+				throw e;
+			}  catch (Throwable e) {
 				io.writeObjectLine(e.getLocalizedMessage());
 			}
 		}

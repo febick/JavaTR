@@ -10,7 +10,6 @@ public class ConsoleInputOutput implements InputOutput {
 	public String readString(String prompt) {
 		writeObject(prompt);
 		String result = null;
-		
 		try {
 			result = reader.readLine();
 		} catch (IOException e) { }

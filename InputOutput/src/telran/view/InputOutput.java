@@ -20,12 +20,14 @@ public interface InputOutput {
 		while (true) {
 			try {
 				String string = readString(prompt);
+				if (string == null) { break; }
 				R res = mapper.apply(string);
 				return res;
 			} catch (Exception e) {
 				writeObjectLine(promptError);
 			} 
 		}
+		throw new EndOfInputException();
 	}
 
 	default Integer readInt(String promt) {
@@ -33,9 +35,9 @@ public interface InputOutput {
 	}
 
 	default Integer readInt(String promt, int min, int max) {
-		return readObject(promt, String.format("No number in [%d-%d]\n", min, max), p -> {
+		return readObject(promt, String.format("No number in [%d-%d]\n", min, max + 1), p -> {
 			Integer res = Integer.parseInt(p);
-			if (res < min || res >= max)
+			if (res < min || res > max)
 				throw new IllegalArgumentException();
 			return res;
 		});
@@ -47,6 +49,10 @@ public interface InputOutput {
 
 	default Long readLong(String promt) {
 		return readObject(promt, "No integer number.", Long::parseLong);
+	}
+	
+	default Double readDouble(String promt) {
+		return readObject(promt, "No number.", Double::parseDouble);
 	}
 
 	default LocalDate readDate(String promt) {

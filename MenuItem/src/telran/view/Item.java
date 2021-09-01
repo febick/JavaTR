@@ -33,4 +33,8 @@ public interface Item {
 		return of("Exit", io -> {}, true);
 	} 
 	
+	static Item back() {
+		return of("Back to previous", io -> {}, true);
+	} 
+	
 }
