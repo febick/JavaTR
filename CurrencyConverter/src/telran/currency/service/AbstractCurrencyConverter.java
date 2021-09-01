@@ -31,21 +31,20 @@ public abstract class AbstractCurrencyConverter extends CurrencyCountryMapper {
 
 	@Override
 	public Map<String, List<String>> strongestCurrencies(int amount) {
-		return rates.entrySet().stream()
-				.sorted((e1, e2) -> Double.compare(e1.getValue(), e2.getValue()))
-				.filter(p -> currencyCountries.containsKey(p.getKey()))
-				.limit(amount)
-				.collect(Collectors.toMap(e -> e.getKey(), e -> currencyCountries.get(e.getKey())));		
+		return createMap(amount, Comparator.naturalOrder());
 	}
-
 
 	@Override
 	public Map<String, List<String>> weakestCurrencies(int amount) {
+		return createMap(amount, Comparator.reverseOrder());
+	}
+	
+	private Map<String, List<String>> createMap(int amount, Comparator<Double> comparator) {
 		return rates.entrySet().stream()
-				.sorted((e1, e2) -> Double.compare(e2.getValue(), e1.getValue()))
-				.filter(p -> currencyCountries.containsKey(p.getKey()))
-				.limit(amount)
-				.collect(Collectors.toMap(e -> e.getKey(), e -> currencyCountries.get(e.getKey())));
+		.sorted(Map.Entry.comparingByValue(comparator))
+		.filter(p -> currencyCountries.containsKey(p.getKey()))
+		.limit(amount)
+		.collect(Collectors.toMap(e -> e.getKey(), e -> currencyCountries.get(e.getKey())));
 	}
 
 	abstract protected void refresh();
