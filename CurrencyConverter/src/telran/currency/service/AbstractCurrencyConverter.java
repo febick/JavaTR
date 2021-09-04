@@ -1,6 +1,7 @@
 package telran.currency.service;
 
 import java.util.*;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 public abstract class AbstractCurrencyConverter extends CurrencyCountryMapper {
@@ -14,8 +15,8 @@ public abstract class AbstractCurrencyConverter extends CurrencyCountryMapper {
 	@Override
 	public Double convert(String from, String to, double amonut) {
 		refresh();
-		var fromInRate = rates.get(checkCountryOrCurrency(from));
-		var toInRate = rates.get(checkCountryOrCurrency(to));
+		var fromInRate = rates.get(checkCountryOrCurrency(from.toUpperCase()));
+		var toInRate = rates.get(checkCountryOrCurrency(to.toUpperCase()));
 		return (fromInRate / toInRate) * amonut;
 	}
 
@@ -41,10 +42,13 @@ public abstract class AbstractCurrencyConverter extends CurrencyCountryMapper {
 	
 	private Map<String, List<String>> createMap(int amount, Comparator<Double> comparator) {
 		return rates.entrySet().stream()
-		.sorted(Map.Entry.comparingByValue(comparator))
 		.filter(p -> currencyCountries.containsKey(p.getKey()))
+		.sorted(Map.Entry.comparingByValue(comparator))
 		.limit(amount)
-		.collect(Collectors.toMap(e -> e.getKey(), e -> currencyCountries.get(e.getKey())));
+		.collect(Collectors.toMap(
+				Entry::getKey, 
+				e -> currencyCountries.get(e.getKey()), 
+				(a, b) -> a, LinkedHashMap::new));
 	}
 
 	abstract protected void refresh();
