@@ -25,6 +25,7 @@ public class ServerCalculatorActions {
 		res.add(Item.of("Subtract", ServerCalculatorActions::subtract));
 		res.add(Item.of("Multiply", ServerCalculatorActions::multiply));
 		res.add(Item.of("Divide", ServerCalculatorActions::divide));
+		res.add(Item.of("Write custom expression", ServerCalculatorActions::custom));
 		res.add(Item.of("Exit", io -> {
 			service.write("exit");
 		}, true));
@@ -46,19 +47,26 @@ public class ServerCalculatorActions {
 	private static void divide(InputOutput io) {
 		makeExpression(io, "/");
 	}
+	
+	private static void custom(InputOutput io) {
+		var expression = io.readString("Enter expression: ");
+		getResult(io, expression);
+	}
 
 	private static void makeExpression(InputOutput io, String operator) {
 		var firstValue = getNumber(io, true);
 		var secondValue = getNumber(io, false);
 		var expression = String.format("%d%s%d", firstValue, operator, secondValue); 
+		getResult(io, expression);
+	}
+
+	private static void getResult(InputOutput io, String expression) {
 		service.write(expression);
-		
 		try {
 			io.writeObjectLine(service.read());
 		} catch (IOException e) {
 			io.writeObjectLine(e.getLocalizedMessage());
 		}
-
 	}
 
 	private static int getNumber(InputOutput io, Boolean isFirst) {
