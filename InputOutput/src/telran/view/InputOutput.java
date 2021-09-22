@@ -1,6 +1,7 @@
 package telran.view;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Set;
 import java.util.function.Function;
@@ -57,6 +58,11 @@ public interface InputOutput {
 
 	default LocalDate readDate(String promt) {
 		return readObject(promt, "Wrong date [YYYY-MM-DD] or any other ISO format", LocalDate::parse);
+	}
+	
+	default LocalDateTime readDateTime(String promt) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+		return readObject(promt, "Date format example: YYYY-MM-DD HH:mm", e -> LocalDateTime.parse(e, formatter));
 	}
 
 	default LocalDate readDate(String promt, String formatPattern) {
