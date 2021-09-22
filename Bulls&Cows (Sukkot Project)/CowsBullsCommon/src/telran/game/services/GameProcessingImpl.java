@@ -14,7 +14,7 @@ public class GameProcessingImpl implements GameProcessing {
 
 	private static final long serialVersionUID = 1L;
 	private static final String DB_FILE_PATH = "users.db"; // Default path to users DB
-	private static final String HISTORY_FILE_PATH = "history/"; // Default path for history files
+	private static final String HISTORY_FILE_PATH = "history/"; // Default path to history files
 
 	private HashMap<String, String> usersList;
 	private HashMap<String, String> usersInGames = new HashMap<>(); // User ID, Game ID
@@ -113,6 +113,7 @@ public class GameProcessingImpl implements GameProcessing {
 				selectedGames.add(game);
 			}
 		}
+		selectedGames.sort(Comparator.naturalOrder());
 		
 		if (selectedGames.size() == 0) {
 			throw new GettingHistoryException("There are no games for the specified period.");
@@ -139,7 +140,7 @@ public class GameProcessingImpl implements GameProcessing {
 		
 		// Creating the directory if necessary
 		File userHistoryDir = new File(folderPath);
-		if (!userHistoryDir.exists()){ userHistoryDir.mkdirs();}
+		if (!userHistoryDir.exists()) userHistoryDir.mkdirs();
 		
 		var fullPath = folderPath + "/" + fileName;
 		save(game, fullPath);

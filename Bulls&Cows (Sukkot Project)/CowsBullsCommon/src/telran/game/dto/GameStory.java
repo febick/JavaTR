@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 
-public class GameStory implements Serializable {
+public class GameStory implements Serializable, Comparable<GameStory> {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -69,6 +69,12 @@ public class GameStory implements Serializable {
 		
 		return builder.toString();
 	}
+
+	@Override
+	public int compareTo(GameStory o) {
+		return date.compareTo(o.date);
+	}
+
 	
 
 }

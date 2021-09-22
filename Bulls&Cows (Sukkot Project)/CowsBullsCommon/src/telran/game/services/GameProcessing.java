@@ -4,7 +4,6 @@ import java.io.*;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.IntStream;
 
 import telran.game.dto.*;
 
@@ -23,9 +22,9 @@ public interface GameProcessing extends Serializable {
 	}
 	
 	default String generateSecret() {
-		StringBuilder builder = new StringBuilder();
-		IntStream secret = new Random().ints(1, 10).distinct().limit(4);
-		secret.forEach(e -> builder.append(e));
+		var builder = new StringBuilder();
+		var secret = new Random().ints(1, 10).distinct().limit(4);
+		secret.forEach(builder::append);
 		return builder.toString();
 	}
 	
@@ -48,6 +47,7 @@ public interface GameProcessing extends Serializable {
 
 		var checkedCombination = combination.toCharArray();
 		var rightCombination = currentGame.getSecret();
+		
 		var size = checkedCombination.length;
 		for (int i = 0; i < size; i++) {
 			var checkedChar = checkedCombination[i];
@@ -59,6 +59,7 @@ public interface GameProcessing extends Serializable {
 				}
 			}
 		}
+		
 		return new MoveResult(bulls, cows, combination);
 	}
 	
