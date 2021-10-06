@@ -6,9 +6,5 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/CowsBullsCommon"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/TcpJavaServer"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/TcpJavaCommon"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/UdpServerJava"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

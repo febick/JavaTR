@@ -8,6 +8,7 @@ import java.util.*;
 import telran.game.dto.*;
 
 public interface GameProcessing extends Serializable {
+	
 	UserCodes registration(String id, String userName) throws Exception;
 	UserCodes isUserExists(String userId) throws Exception;
 	String startNewGame(String userId) throws Exception;

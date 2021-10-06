@@ -2,6 +2,7 @@ package telran.game.controller;
 
 import telran.game.controller.actions.GameActions;
 import telran.game.net.GameProxyTcpJava;
+import telran.game.net.GameProxyUdpJava;
 import telran.game.services.GameProcessing;
 import telran.view.*;
 
@@ -13,7 +14,8 @@ public class GameClientAppl {
 	public static void main(String[] args) throws Exception {
 
 		try {
-			gameProcessing = new GameProxyTcpJava("localhost", 5000);
+//			gameProcessing = new GameProxyTcpJava("localhost", 5000);
+			gameProcessing = new GameProxyUdpJava("localhost", 5000);
 			Menu menu = new Menu("=== Bulls & Cows ===", getItems());
 			menu.perform(io);
 		} catch (Exception e) {

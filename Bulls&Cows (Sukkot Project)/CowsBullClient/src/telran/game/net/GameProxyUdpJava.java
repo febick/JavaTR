@@ -5,13 +5,13 @@ import java.time.LocalDateTime;
 import static telran.game.api.RequestTypesApi.*;
 import telran.game.dto.*;
 import telran.game.services.GameProcessing;
-import telran.net.TcpJavaClient;
+import telran.net.UdpJavaClient;
 
-public class GameProxyTcpJava extends TcpJavaClient implements GameProcessing {
+public class GameProxyUdpJava extends UdpJavaClient implements GameProcessing {
 
 	private static final long serialVersionUID = 1L;
 
-	public GameProxyTcpJava(String host, int port) throws Exception {
+	public GameProxyUdpJava(String host, int port) throws Exception {
 		super(host, port);
 	}
 

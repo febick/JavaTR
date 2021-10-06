@@ -6,10 +6,11 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/CowsBullsCommon"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/InputOutput"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/MenuItem"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/TcpJavaClient"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/TcpJavaCommon"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/TcpJavaClient"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/MenuItem"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/InputOutput"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/CowsBullsCommon"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/UdpJavaClient"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
