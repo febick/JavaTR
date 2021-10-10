@@ -5,27 +5,32 @@ import telran.currency.service.*;
 import telran.view.*;
 
 public class CurrencyConverterAppl {
-	
+
 	private static InputOutput io = new ConsoleInputOutput();
 	private static CurrencyConverter converter = null;
 
 	public static void main(String[] args) throws Exception {
-		
+
 		RatesProvider provider = args.length == 0 ? RatesProvider.FIXER : RatesProvider.LOCAL_FILE;
-		
+
 		switch (provider) {
-			case FIXER:
+		case FIXER:
+			try {
 				converter = CurrencyConvererFixerImpl.getCurrencyConverter();
 				break;
-			case LOCAL_FILE:
-				try {
-					converter = CurrencyConverterFileImpl.getCurrencyConverter(args[0]);
-				} catch (Exception e) {
-					io.writeObjectLine("File with actual rates not found.\n");
-					return;
-				}
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
+				break;
+			}
+		case LOCAL_FILE:
+			try {
+				converter = CurrencyConverterFileImpl.getCurrencyConverter(args[0]);
+			} catch (Exception e) {
+				io.writeObjectLine("File with actual rates not found.\n");
+				return;
+			}
 		}
-		
+
 		Menu menu = new Menu("Currency Converter", getItems());
 		menu.perform(io);
 	}
