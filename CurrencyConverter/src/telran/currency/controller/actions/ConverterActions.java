@@ -10,12 +10,12 @@ public class ConverterActions {
 	
 	private ConverterActions() {}
 	
-	public static Item[] getConverterItems(CurrencyConverter converter) {
+	public static Item[] getConverterItems(CurrencyConverter converter) throws Exception {
 		ConverterActions.converter = converter;
 		return getItems();
 	}
 
-	private static Item[] getItems() {
+	private static Item[] getItems() throws Exception {
 		List<Item> res = new ArrayList<>();
 		res.add(Item.of("Convert currency", ConverterActions::convertAction));
 		res.add(Item.of("Display strongest currencies", ConverterActions::getStrongest));

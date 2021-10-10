@@ -50,6 +50,10 @@ public abstract class AbstractCurrencyConverter extends CurrencyCountryMapper {
 				e -> currencyCountries.get(e.getKey()), 
 				(a, b) -> a, LinkedHashMap::new));
 	}
+	
+	public void updateRates(Map<String, Double> rates) {
+		this.rates = rates;
+	}
 
 	abstract protected void refresh();
 
