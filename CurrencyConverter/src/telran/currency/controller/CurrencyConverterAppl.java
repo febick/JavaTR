@@ -19,15 +19,16 @@ public class CurrencyConverterAppl {
 				converter = CurrencyConvererFixerImpl.getCurrencyConverter();
 				break;
 			} catch (Exception e) {
-				System.out.println(e.getMessage());
+				io.writeObjectLine(e.getMessage());
 				break;
 			}
 		case LOCAL_FILE:
 			try {
 				converter = CurrencyConverterFileImpl.getCurrencyConverter(args[0]);
+				break;
 			} catch (Exception e) {
 				io.writeObjectLine("File with actual rates not found.\n");
-				return;
+				break;
 			}
 		}
 
