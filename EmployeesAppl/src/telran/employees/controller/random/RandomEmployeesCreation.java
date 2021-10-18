@@ -21,7 +21,7 @@ public class RandomEmployeesCreation {
 		printEmployees();
 	}
 
-	private static void printEmployees() {
+	private static void printEmployees() throws Exception {
 		base.getAllEmployees().forEach(System.out::print);
 	}
 
@@ -43,7 +43,13 @@ public class RandomEmployeesCreation {
 		.longs(minID, maxID)
 		.distinct()
 		.limit(limit)
-		.forEach(id -> base.addEmployee(new Employee(id, getSalary(), getBirthday(), getDepartment())));
+		.forEach(id -> {
+			try {
+				base.addEmployee(new Employee(id, getSalary(), getBirthday(), getDepartment()));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		});
 		
 		base.save(filePath);
 	}
