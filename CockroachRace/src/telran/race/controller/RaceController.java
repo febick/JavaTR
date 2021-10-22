@@ -10,6 +10,7 @@ public class RaceController {
 	public static int winner;
 	private static int countOfRacers;
 	private static List<Racer> racers;
+	public static Boolean isRaceActive;
 	
 	public static void main(String[] args) {
 		loadProperties(args);
@@ -24,6 +25,7 @@ public class RaceController {
 			distance = Integer.parseInt(props.getProperty("distance"));
 			countOfRacers = Integer.parseInt(props.getProperty("racers"));
 			racers = new LinkedList<>();
+			isRaceActive = true;
 		} catch (FileNotFoundException e) {
 			System.out.println("Race can't start: Properties file not found");
 		} catch (IOException e) {
@@ -56,7 +58,8 @@ public class RaceController {
 		});	
 	}
 	
-	private static void finish() {
+	public static void finish() {
+		isRaceActive = false;
 		System.out.printf("\nCockroach number %d won!", winner);
 	}
 	

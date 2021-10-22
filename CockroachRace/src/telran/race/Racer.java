@@ -18,15 +18,21 @@ public class Racer extends Thread {
 	
 	@Override
 	public void run() {
+		var lastRound = RaceController.distance - 1;
 		for (int i = 0; i < RaceController.distance; i++) {
-				setLeader();
+			if (RaceController.isRaceActive) {
+				System.out.println("🪳 " + number + " (round " + i + ")");
+				if (i == lastRound) { setLeader(); }
 				setDelay();
+			} else {
+				break;
+			}
 		}
 	}
 	
 	private void setLeader() {
-		System.out.println("🪳 - " + number);
 		RaceController.winner = number;
+		RaceController.finish();
 	}
 	
 	private void setDelay() {
