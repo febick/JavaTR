@@ -2,11 +2,11 @@ package telran.printer.system;
 
 public class Printer extends Thread {
 
-	public int symbol;
+	private int symbol;
 	private int max;
 	private int portion;
 	private int printedCount;
-	public Printer next;
+	private Printer next;
 
 	public Printer(int symbol, int max, int portion) {
 		this.symbol = symbol;

@@ -9,7 +9,7 @@ public class PrinterController {
 	private static final int N_PRINTERS = 5; 
 	private static final int N_NUMBERS = 100; 
 	private static final int N_PORTIONS = 5; 
-	public static List<Printer> allPrinters;
+	private static List<Printer> allPrinters;
 
 	public static void main(String[] args) {
 		createPrinters();
