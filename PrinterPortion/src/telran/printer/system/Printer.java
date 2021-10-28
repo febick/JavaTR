@@ -20,13 +20,12 @@ public class Printer extends Thread {
 
 	@Override
 	public void run() {		
-		while (true) {
+		while (printedCount < max) {
 			try {
 				Thread.sleep(Integer.MAX_VALUE);
 			} catch (InterruptedException e) {
 				displayNextPortion();
 				next.interrupt();
-				if (printedCount >= max) { break; }
 			}
 		}
 	}
