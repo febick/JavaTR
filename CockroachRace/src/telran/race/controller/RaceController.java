@@ -1,16 +1,19 @@
 package telran.race.controller;
 
 import java.io.*;
+import java.time.Instant;
 import java.util.*;
+
 import telran.race.Racer;
 
 public class RaceController {
 
 	public static int distance;
-	public static int winner;
 	private static int countOfRacers;
 	private static List<Racer> racers;
-	public static Boolean isRaceActive;
+	private static final List<Racer> results = new LinkedList<>();
+	public static Instant startTime;
+
 	
 	public static void main(String[] args) {
 		loadProperties(args);
@@ -25,7 +28,6 @@ public class RaceController {
 			distance = Integer.parseInt(props.getProperty("distance"));
 			countOfRacers = Integer.parseInt(props.getProperty("racers"));
 			racers = new LinkedList<>();
-			isRaceActive = true;
 		} catch (FileNotFoundException e) {
 			System.out.println("Race can't start: Properties file not found");
 		} catch (IOException e) {
@@ -36,7 +38,7 @@ public class RaceController {
 	private static void startRace() {
 		prepareRacers();
 		run();
-		finish();
+		showWinner();
 	}
 	
 	private static void prepareRacers() {
@@ -46,6 +48,7 @@ public class RaceController {
 	}
 	
 	private static void run()  {
+		startTime = Instant.now();
 		racers.forEach(racer -> {
 			racer.start();
 		});
@@ -58,9 +61,16 @@ public class RaceController {
 		});	
 	}
 	
-	public static void finish() {
-		isRaceActive = false;
-		System.out.printf("\nCockroach number %d won!", winner);
+	public static void finish(Racer racer) {
+		synchronized (results) {
+			results.add(racer);
+		}
 	}
-	
+		
+	private static void showWinner() {
+		System.out.println("Place\tRacer\tTime");
+		for (int i = 1; i <= countOfRacers; i++) {
+			System.out.printf("  %d\t%s", i, results.get(i - 1).showTime());
+		}
+	}	
 }

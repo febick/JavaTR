@@ -1,5 +1,7 @@
 package telran.race;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Random;
 
 import telran.race.controller.RaceController;
@@ -10,6 +12,7 @@ public class Racer extends Thread {
 	private int range = MAX - MIN + 1;
 	private Random randomGenerator = new Random();
 	private int number;
+	private Instant finishTime;
 	
 	public Racer(int number) {
 		super();
@@ -18,21 +21,17 @@ public class Racer extends Thread {
 	
 	@Override
 	public void run() {
-		var lastRound = RaceController.distance - 1;
-		for (int i = 0; i < RaceController.distance; i++) {
-			if (RaceController.isRaceActive) {
-				System.out.println("🪳 " + number + " (round " + i + ")");
-				if (i == lastRound) { setLeader(); }
+		var lastRound = RaceController.distance;
+		for (int i = 0; i <= lastRound; i++) {
 				setDelay();
-			} else {
-				break;
-			}
+				System.out.println("🪳 " + number + " (round " + i + ")");
+				if (i == lastRound) { finishLine(); }
 		}
 	}
 	
-	private void setLeader() {
-		RaceController.winner = number;
-		RaceController.finish();
+	private void finishLine() {
+		finishTime = Instant.now();
+		RaceController.finish(this);
 	}
 	
 	private void setDelay() {
@@ -40,8 +39,13 @@ public class Racer extends Thread {
 		try {
 			sleep(randomDelay);
 		} catch (InterruptedException e) {
-			System.out.println("Interrupted");
+			throw new IllegalStateException();
 		}
+	}
+	
+	public String showTime() {
+		var time = ChronoUnit.MILLIS.between(RaceController.startTime, finishTime);
+		return String.format("🪳%d\t%d mls.\n", number, time);
 	}
 
 }
