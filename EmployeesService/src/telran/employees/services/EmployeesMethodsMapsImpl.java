@@ -38,7 +38,7 @@ public class EmployeesMethodsMapsImpl implements EmployeesMethods {
 
 	@Override
 	public EmployeesCodes addEmployee(Employee employee) {
-		lockAll(true);
+		lockWriting(true);
 		try {
 			var result = employees.putIfAbsent(employee.getId(), employee);
 			if (result != null) { return EmployeesCodes.ALREADY_EXISTS; }
@@ -47,7 +47,7 @@ public class EmployeesMethodsMapsImpl implements EmployeesMethods {
 			addEmployeeAge(employee);
 			return EmployeesCodes.OK;
 		} finally {
-			lockAll(false);
+			lockWriting(false);
 		}
 	}
 
@@ -65,7 +65,7 @@ public class EmployeesMethodsMapsImpl implements EmployeesMethods {
 
 	@Override
 	public EmployeesCodes removeEmployee(long id) {
-		lockAll(true);
+		lockWriting(true);
 		try {
 			var removedEmployee = employees.remove(id);
 			if (removedEmployee == null) { return EmployeesCodes.NOT_FOUND; }
@@ -74,7 +74,7 @@ public class EmployeesMethodsMapsImpl implements EmployeesMethods {
 			removeFromAgeList(removedEmployee);
 			return EmployeesCodes.OK;
 		} finally {
-			lockAll(false);
+			lockWriting(false);
 		}
 	}
 
@@ -226,13 +226,13 @@ public class EmployeesMethodsMapsImpl implements EmployeesMethods {
 
 	@Override
 	public void save(String filePath) throws Exception {
-		lockAll(true);
+		lockWriting(true);
 		try {
 			try (var output = new ObjectOutputStream(new FileOutputStream(filePath))) {
 				output.writeObject(this);
 			} 
 		} finally {
-			lockAll(false);
+			lockWriting(false);
 		}
 	}
 
@@ -246,24 +246,16 @@ public class EmployeesMethodsMapsImpl implements EmployeesMethods {
 		lock.unlock();
 	}
 
-	private void lockAll(Boolean status) {
+	private void lockWriting(Boolean status) {
 		if (status) {
-			employeesLockRead.lock();
 			employeesLockWrite.lock();
-			employeesDepLockRead.lock();
 			employeesDepLockWrite.lock();
-			employeesSalaryLockRead.lock();
 			employeesSalaryLockWrite.lock();
-			employeesAgeLockRead.lock();
 			employeesAgeLockWrite.lock();
 		} else {
-			employeesLockRead.unlock();
 			employeesLockWrite.unlock();
-			employeesDepLockRead.unlock();
 			employeesDepLockWrite.unlock();
-			employeesSalaryLockRead.unlock();
 			employeesSalaryLockWrite.unlock();
-			employeesAgeLockRead.unlock();
 			employeesAgeLockWrite.unlock();
 		}
 	}
