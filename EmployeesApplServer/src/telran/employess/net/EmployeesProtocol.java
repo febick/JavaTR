@@ -6,12 +6,14 @@ import telran.employees.dto.UpdateSalaryData;
 import telran.employees.services.EmployeesMethods;
 import static telran.employees.api.RequestTypesApi.*;
 import java.io.Serializable;
+import java.lang.reflect.Method;
 import java.util.*;
 
 
 import telran.net.ApplProtocolJava;
 import telran.net.dto.*;
 
+@SuppressWarnings("unused")
 public class EmployeesProtocol implements ApplProtocolJava {
 
 	public EmployeesMethods employeesMethods;
@@ -22,21 +24,14 @@ public class EmployeesProtocol implements ApplProtocolJava {
 
 	@Override
 	public ResponseJava getResponse(RequestJava request) {
-		System.out.println(request.data);
-		
-		switch (request.requestType) {
-		case ADD_EMPLOYEE: return employees_add(request.data);
-		case REMOVE_EMPLOYEE: return employees_remove(request.data);
-		case UPDATE_SALARY: return employees_salary_update(request.data);
-		case UPDATE_DEPARTAMENT: return employees_department_update(request.data);
-		case GET_EMPLOYEE: return employees_get(request.data);
-		case GET_ALL_EMPLOYEES: return employees(request.data);
-		case GET_EMPLOYEES_SALARY: return employees_salary_get(request.data);
-		case GET_EMPLOYEES_AGE: return employees_age_get(request.data);
-		case GET_EMPLOYEES_DEPARTMENT: return employees_department_get(request.data);
-		case GET_DEPARTMENTS_SALARY: return employees_departments_salary_get(request.data);
-		case DISTRIBUTION_SALARY: return employees_distribution_salary(request.data);
-		default: return new ResponseJava(ResponseCode.WRONG_REQUEST_TYPE, request.requestType);
+		// add synchronized
+		try {
+			Method method = EmployeesProtocol.class.getDeclaredMethod(request.requestType.replaceAll("/", "_"), Serializable.class);
+			return (ResponseJava) method.invoke(this, request.data);
+		} catch (NoSuchMethodException e) {
+			return new ResponseJava(ResponseCode.WRONG_REQUEST_TYPE, new Exception("Wrong request: " + request.requestType));
+		} catch (Exception e) {
+			return new ResponseJava(ResponseCode.WRONG_REQUEST_DATA, e);
 		}
 	}
 
